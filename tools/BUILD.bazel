@@ -1,0 +1,5 @@
+exports_files([
+    "build.py",
+    "build_qemu.py",
+    "vm.py",
+])

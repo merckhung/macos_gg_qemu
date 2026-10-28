@@ -1,0 +1,94 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: libusb
+Source: https://github.com/libusb/libusb
+
+Files: *
+Copyright:
+ Copyright 2001 Johannes Erdfelt <johannes@erdfelt.com>
+ Copyright 2007-2009 Daniel Drake <dsd@gentoo.org>
+ Copyright 2008-2023 Nathan Hjelm <hjelmn@cs.unm.edu>
+ Copyright 2008-2023 Nathan Hjelm <hjelmn@users.sourceforge.net>
+ Copyright 2009-2012 Pete Batard <pete@akeo.ie>
+ Copyright 2010-2013 Peter Stuge <peter@stuge.se>
+ Copyright 2010 Michael Plante <michael.plante@gmail.com>
+ Copyright 2011-2013 Martin Pieuchot <mpi@openbsd.org>
+ Copyright 2011 Vitali Lovich <vlovich@aliph.com>
+ Copyright 2012-2013 Hans de Goede <hdegoede@redhat.com>
+ Copyright 2012-2013 RealVNC Ltd.
+ Copyright 2012-2021 Nathan Hjelm <hjelmn@mac.com>
+ Copyright 2012 Toby Gray <toby.gray@realvnc.com>
+ Copyright 2014-2020 Chris Dickens <christopher.a.dickens@gmail.com>
+ Copyright 2014 Akshay Jaggi <akshay1994.leo@gmail.com>
+ Copyright 2014 Red Hat, Inc.
+ Copyright 2016, Oracle and/or its affiliates.
+ Copyright 2019-2023 Google LLC. All rights reserved.
+ Copyright 2019 Nathan Hjelm <hjelmn@cs.umm.edu>
+ Copyright 2019 Pino Toscano <toscano.pino@tiscali.it>
+ Copyright 2022-2023 Tormod Volden
+ Copyright 2022 Benjamin Berg <bberg@redhat.com>
+ Copyright 2023 Ingvar Stepanyan <me@rreverser.com>
+ Copyright 2023 Oxide Computer Company
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with the GNU C Library; if not, see
+ <https://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the LGPL license can be found
+ in the /usr/share/common-licenses/LGPL-2.1 file.
+
+Files:
+ examples/ezusb.c
+ examples/ezusb.h
+ examples/fxload.c
+Copyright:
+ Copyright 2001 Stephen Williams (steve@icarus.com)
+ Copyright 2001-2002 David Brownell (dbrownell@users.sourceforge.net)
+ Copyright 2008 Roger Williams (rawqux@users.sourceforge.net)
+ Copyright 2012 Pete Batard (pete@akeo.ie)
+ Copyright 2013 Federico Manzan (f.manzan@gmail.com)
+License: GPL-2+
+ This source code is free software; you can redistribute it
+ and/or modify it in source code form under the terms of the GNU
+ General Public License as published by the Free Software
+ Foundation; either version 2 of the License, or (at your option)
+ any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, see
+ <https://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GPL license can be found
+ in the /usr/share/common-licenses/GPL-2 file.
+
+Files:
+ libusb/os/haiku_pollfs.cpp
+ libusb/os/haiku_usb_raw.h
+Copyright:
+ Copyright 2006-2008, Haiku Inc. All rights reserved.
+License: MIT
+ Distributed under the terms of the MIT License.
+
+Files:
+ INSTALL
+Copyright:
+ Copyright 1994-1996, 1999-2002, 2004-2017, 2020-2024 Free Software Foundation, Inc.
+License: FSFAP
+ Copying and distribution of this file, with or without modification,
+ are permitted in any medium without royalty provided the copyright
+ notice and this notice are preserved.  This file is offered as-is,
+ without warranty of any kind.

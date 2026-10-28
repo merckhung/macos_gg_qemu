@@ -1,0 +1,6 @@
+build --action_env=PATH
+build --action_env=HOME
+build --action_env=CARGO_HOME
+build --action_env=RUSTUP_HOME
+build --jobs=2
+build --verbose_failures

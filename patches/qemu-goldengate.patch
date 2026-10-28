@@ -1,0 +1,976 @@
+diff --git a/hw/audio/virtio-snd-pci.c b/hw/audio/virtio-snd-pci.c
+index 230581ed63..278ebaa2df 100644
+--- a/hw/audio/virtio-snd-pci.c
++++ b/hw/audio/virtio-snd-pci.c
+@@ -25,9 +25,12 @@ struct VirtIOSoundPCI {
+     VirtIOPCIProxy parent_obj;
+ 
+     VirtIOSound vdev;
++    bool ascending_capabilities;
+ };
+ 
+ static const Property virtio_snd_pci_properties[] = {
++    DEFINE_PROP_BOOL("x-ascending-capabilities", VirtIOSoundPCI,
++                     ascending_capabilities, false),
+     DEFINE_PROP_BIT("ioeventfd", VirtIOPCIProxy, flags,
+                     VIRTIO_PCI_FLAG_USE_IOEVENTFD_BIT, true),
+     DEFINE_PROP_UINT32("vectors", VirtIOPCIProxy, nvectors, 2),
+@@ -40,6 +43,31 @@ static void virtio_snd_pci_realize(VirtIOPCIProxy *vpci_dev, Error **errp)
+ 
+     virtio_pci_force_virtio_1(vpci_dev);
+     qdev_realize(vdev, BUS(&vpci_dev->bus), errp);
++
++    if (dev->ascending_capabilities && qdev_is_realized(vdev)) {
++        uint8_t *config = vpci_dev->pci_dev.config;
++        bool capabilities[PCI_CONFIG_SPACE_SIZE] = { false };
++        unsigned offset, previous = PCI_CAPABILITY_LIST;
++
++        /*
++         * As virtio-net-pci's: macOS 27's virtio PCI transport never starts
++         * a device whose capabilities are linked from high offsets to low.
++         * Keep each capability's offset and contents; relink them in
++         * ascending address order.
++         */
++        for (offset = config[PCI_CAPABILITY_LIST]; offset;
++             offset = config[offset + PCI_CAP_LIST_NEXT]) {
++            capabilities[offset] = true;
++        }
++        for (offset = PCI_CONFIG_HEADER_SIZE; offset < PCI_CONFIG_SPACE_SIZE;
++             offset++) {
++            if (capabilities[offset]) {
++                config[previous] = offset;
++                previous = offset + PCI_CAP_LIST_NEXT;
++            }
++        }
++        config[previous] = 0;
++    }
+ }
+ 
+ static void virtio_snd_pci_class_init(ObjectClass *klass, const void *data)
+diff --git a/hw/audio/virtio-snd.c b/hw/audio/virtio-snd.c
+index 6df7ea0eb0..ec362fb676 100644
+--- a/hw/audio/virtio-snd.c
++++ b/hw/audio/virtio-snd.c
+@@ -280,6 +280,139 @@ static void virtio_snd_handle_pcm_info(VirtIOSound *s,
+                  cmd->payload_size);
+ }
+ 
++/*
++ * Validate an item information request against @total items and the
++ * response buffer, as virtio_snd_handle_pcm_info does for streams.
++ * Returns false, with the response code set, when the request is malformed.
++ */
++static bool virtio_snd_query_valid(virtio_snd_ctrl_command *cmd,
++                                   const char *what, uint32_t total,
++                                   size_t item_size, uint32_t *start_id,
++                                   uint32_t *count)
++{
++    virtio_snd_query_info req;
++    uint32_t tmp, size;
++    size_t msg_sz = iov_to_buf(cmd->elem->out_sg, cmd->elem->out_num, 0,
++                               &req, sizeof(virtio_snd_query_info));
++
++    if (msg_sz != sizeof(virtio_snd_query_info)) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "%s info: virtio-snd command size incorrect %zu vs %zu\n",
++                      what, msg_sz, sizeof(virtio_snd_query_info));
++        cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_BAD_MSG);
++        return false;
++    }
++    *start_id = le32_to_cpu(req.start_id);
++    *count = le32_to_cpu(req.count);
++    size = le32_to_cpu(req.size);
++    if (*start_id > total || !g_uint_checked_add(&tmp, *start_id, *count) ||
++        tmp > total) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "%s info: start_id %u + count %u exceeds %u items\n",
++                      what, *start_id, *count, total);
++        cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_BAD_MSG);
++        return false;
++    }
++    if (*count && (size < item_size ||
++                   !g_uint_checked_mul(&tmp, size, *count) ||
++                   !g_uint_checked_add(&tmp, tmp, sizeof(virtio_snd_hdr)) ||
++                   iov_size(cmd->elem->in_sg, cmd->elem->in_num) < tmp)) {
++        qemu_log_mask(LOG_GUEST_ERROR, "%s info: response buffer too small\n",
++                      what);
++        cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_BAD_MSG);
++        return false;
++    }
++    return true;
++}
++
++/*
++ * Handle the VIRTIO_SND_R_JACK_INFO request: one jack per configured jack,
++ * all connected, each a line out (even ids) or line in (odd ids) pin of the
++ * stream with the same parity, described by its HDA pin default
++ * configuration (High Definition Audio Specification 7.3.3.31).
++ *
++ * This used to answer VIRTIO_SND_S_NOT_SUPP whatever was asked. macOS 27's
++ * AppleVirtIOSound asks for jack and channel map information while it
++ * starts, even with zero jacks configured, and an unsupported answer leaves
++ * the driver started but never registered: the guest has no audio device.
++ */
++static void virtio_snd_handle_jack_info(VirtIOSound *s,
++                                        virtio_snd_ctrl_command *cmd)
++{
++    uint32_t start_id, count;
++    g_autofree virtio_snd_jack_info *jack_info = NULL;
++
++    if (!virtio_snd_query_valid(cmd, "jack", s->snd_conf.jacks,
++                                sizeof(virtio_snd_jack_info), &start_id,
++                                &count)) {
++        return;
++    }
++    jack_info = g_new0(virtio_snd_jack_info, count ? count : 1);
++    for (uint32_t i = 0; i < count; i++) {
++        uint32_t id = start_id + i;
++        bool output = (id % 2) == 0;
++
++        jack_info[i].hdr.hda_fn_nid = cpu_to_le32(id);
++        jack_info[i].features = 0;
++        /* Jack, rear, line out (green) / line in (blue), 1/8" connector. */
++        jack_info[i].hda_reg_defconf =
++            cpu_to_le32(output ? 0x01014010 : 0x01813020);
++        jack_info[i].hda_reg_caps = 0;
++        jack_info[i].connected = 1;
++    }
++    cmd->payload_size = sizeof(virtio_snd_jack_info) * count;
++    cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_OK);
++    if (count) {
++        iov_from_buf(cmd->elem->in_sg, cmd->elem->in_num,
++                     sizeof(virtio_snd_hdr), jack_info, cmd->payload_size);
++    }
++}
++
++/*
++ * Handle the VIRTIO_SND_R_CHMAP_INFO request: channel map i belongs to
++ * stream i (or to the last stream), in that stream's direction, with its
++ * channels at front left and front right (front center for a mono stream).
++ * See virtio_snd_handle_jack_info for why it is answered rather than refused.
++ */
++static void virtio_snd_handle_chmap_info(VirtIOSound *s,
++                                         virtio_snd_ctrl_command *cmd)
++{
++    uint32_t start_id, count;
++    g_autofree virtio_snd_chmap_info *chmap_info = NULL;
++
++    trace_virtio_snd_handle_chmap_info();
++    if (!virtio_snd_query_valid(cmd, "chmap", s->snd_conf.chmaps,
++                                sizeof(virtio_snd_chmap_info), &start_id,
++                                &count)) {
++        return;
++    }
++    chmap_info = g_new0(virtio_snd_chmap_info, count ? count : 1);
++    for (uint32_t i = 0; i < count; i++) {
++        uint32_t id = start_id + i;
++        uint32_t stream_id = MIN(id, s->snd_conf.streams - 1);
++        VirtIOSoundPCMStream *stream = virtio_snd_pcm_get_stream(s, stream_id);
++        uint8_t channels = stream ? MAX(stream->info.channels_max, 1) : 2;
++
++        chmap_info[i].hdr.hda_fn_nid = cpu_to_le32(stream_id);
++        chmap_info[i].direction = stream ? stream->info.direction
++                                         : VIRTIO_SND_D_OUTPUT;
++        if (channels == 1) {
++            chmap_info[i].channels = 1;
++            chmap_info[i].positions[0] = VIRTIO_SND_CHMAP_MONO;
++        } else {
++            chmap_info[i].channels = 2;
++            chmap_info[i].positions[0] = VIRTIO_SND_CHMAP_FL;
++            chmap_info[i].positions[1] = VIRTIO_SND_CHMAP_FR;
++        }
++    }
++    cmd->payload_size = sizeof(virtio_snd_chmap_info) * count;
++    cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_OK);
++    if (count) {
++        iov_from_buf(cmd->elem->in_sg, cmd->elem->in_num,
++                     sizeof(virtio_snd_hdr), chmap_info, cmd->payload_size);
++    }
++}
++
+ /*
+  * Set the given stream params.
+  * Returns the response status code. (VIRTIO_SND_S_*).
+@@ -793,9 +926,11 @@ process_cmd(VirtIOSound *s, virtio_snd_ctrl_command *cmd)
+ 
+     switch (code) {
+     case VIRTIO_SND_R_JACK_INFO:
++        virtio_snd_handle_jack_info(s, cmd);
++        break;
+     case VIRTIO_SND_R_JACK_REMAP:
+         qemu_log_mask(LOG_UNIMP,
+-                     "virtio_snd: jack functionality is unimplemented.\n");
++                     "virtio_snd: jack remapping is unimplemented.\n");
+         cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_NOT_SUPP);
+         break;
+     case VIRTIO_SND_R_PCM_INFO:
+@@ -817,10 +952,7 @@ process_cmd(VirtIOSound *s, virtio_snd_ctrl_command *cmd)
+         virtio_snd_handle_pcm_release(s, cmd);
+         break;
+     case VIRTIO_SND_R_CHMAP_INFO:
+-        qemu_log_mask(LOG_UNIMP,
+-                     "virtio_snd: chmap info functionality is unimplemented.\n");
+-        trace_virtio_snd_handle_chmap_info();
+-        cmd->resp.code = cpu_to_le32(VIRTIO_SND_S_NOT_SUPP);
++        virtio_snd_handle_chmap_info(s, cmd);
+         break;
+     default:
+         /* error */
+diff --git a/hw/vmapple/Kconfig b/hw/vmapple/Kconfig
+index 37c27473e2..06a7317a55 100644
+--- a/hw/vmapple/Kconfig
++++ b/hw/vmapple/Kconfig
+@@ -14,10 +14,10 @@ config VMAPPLE_VIRTIO_BLK
+ 
+ config VMAPPLE
+     bool
+-    depends on ARM
+-    depends on HVF
++    depends on AARCH64
++    depends on TCG || HVF
+     depends on MAC_PVG
+-    default y if ARM
++    default y
+     imply PCI_DEVICES
+     select ARM_GICV3
+     select PLATFORM_BUS
+diff --git a/hw/vmapple/aes.c b/hw/vmapple/aes.c
+index 9d062d5a7f..437171e41c 100644
+--- a/hw/vmapple/aes.c
++++ b/hw/vmapple/aes.c
+@@ -42,7 +42,7 @@ OBJECT_DECLARE_SIMPLE_TYPE(AESState, APPLE_AES)
+ #define CMD_KEY_BLOCK_MODE_MASK  (0x3 << CMD_KEY_BLOCK_MODE_SHIFT)
+ #define CMD_IV            0x2
+ #define CMD_IV_CONTEXT_SHIFT     26
+-#define CMD_IV_CONTEXT_MASK      (0x3 << CMD_KEY_CONTEXT_SHIFT)
++#define CMD_IV_CONTEXT_MASK      (0x3 << CMD_IV_CONTEXT_SHIFT)
+ #define CMD_DSB           0x3
+ #define CMD_SKG           0x4
+ #define CMD_DATA          0x5
+@@ -268,13 +268,12 @@ static void dump_data(const char *desc, const void *p, size_t len)
+ static bool cmd_data(AESState *s)
+ {
+     uint32_t cmd = s->fifo[0];
+-    uint32_t ctxt_iv = 0;
++    uint32_t ctxt_iv = (cmd & CMD_DATA_IV_CTX_MASK) >> CMD_DATA_IV_CTX_SHIFT;
+     uint32_t ctxt_key = (cmd & CMD_DATA_KEY_CTX_MASK) >> CMD_DATA_KEY_CTX_SHIFT;
+     uint32_t len = cmd & CMD_DATA_LEN_MASK;
+     uint64_t src_addr = s->fifo[2];
+     uint64_t dst_addr = s->fifo[3];
+-    QCryptoCipherAlgo alg;
+-    g_autoptr(QCryptoCipher) cipher = NULL;
++    AES_KEY aes_key;
+     g_autoptr(GByteArray) src = NULL;
+     g_autoptr(GByteArray) dst = NULL;
+     MemTxResult r;
+@@ -286,13 +285,14 @@ static bool cmd_data(AESState *s)
+ 
+     if (!has_payload(s, 3)) {
+         /* wait for payload */
+-        qemu_log_mask(LOG_GUEST_ERROR, "%s: No payload\n", __func__);
+         return false;
+     }
+ 
+     if (ctxt_key >= ARRAY_SIZE(s->key) ||
+-        ctxt_iv >= ARRAY_SIZE(s->iv)) {
+-        qemu_log_mask(LOG_GUEST_ERROR, "%s: Invalid key or iv\n", __func__);
++        ctxt_iv >= ARRAY_SIZE(s->iv) ||
++        (len % AES_BLOCK_SIZE) != 0) {
++        qemu_log_mask(LOG_GUEST_ERROR, "%s: Invalid key, iv, or len (%u)\n",
++                      __func__, len);
+         return false;
+     }
+ 
+@@ -311,45 +311,54 @@ static bool cmd_data(AESState *s)
+ 
+     dump_data("cmd_data(): src_data=", src->data, len);
+ 
+-    switch (s->key[ctxt_key].key_len) {
+-    case 128 / 8:
+-        alg = QCRYPTO_CIPHER_ALGO_AES_128;
+-        break;
+-    case 192 / 8:
+-        alg = QCRYPTO_CIPHER_ALGO_AES_192;
+-        break;
+-    case 256 / 8:
+-        alg = QCRYPTO_CIPHER_ALGO_AES_256;
+-        break;
+-    default:
++    if (s->key[ctxt_key].key_len != 16 &&
++        s->key[ctxt_key].key_len != 24 &&
++        s->key[ctxt_key].key_len != 32) {
+         qemu_log_mask(LOG_GUEST_ERROR, "%s: Invalid key length\n", __func__);
+         return false;
+     }
+-    cipher = qcrypto_cipher_new(alg, s->block_mode,
+-                                s->key[ctxt_key].key,
+-                                s->key[ctxt_key].key_len, NULL);
+-    if (!cipher) {
+-        qemu_log_mask(LOG_GUEST_ERROR, "%s: Failed to create cipher object\n",
+-                      __func__);
+-        return false;
+-    }
+-    if (s->block_mode != QCRYPTO_CIPHER_MODE_ECB) {
+-        if (qcrypto_cipher_setiv(cipher, (void *)s->iv[ctxt_iv].iv,
+-                                 sizeof(s->iv[ctxt_iv].iv), NULL) != 0) {
+-            qemu_log_mask(LOG_GUEST_ERROR, "%s: Failed to set IV\n", __func__);
+-            return false;
+-        }
+-    }
++
+     if (s->is_encrypt) {
+-        if (qcrypto_cipher_encrypt(cipher, src->data, dst->data, len, NULL) != 0) {
+-            qemu_log_mask(LOG_GUEST_ERROR, "%s: Encryption failed\n", __func__);
++        if (AES_set_encrypt_key(s->key[ctxt_key].key,
++                                s->key[ctxt_key].key_len * 8, &aes_key) != 0) {
++            qemu_log_mask(LOG_GUEST_ERROR, "%s: Failed to set encrypt key\n",
++                          __func__);
+             return false;
+         }
++        for (uint32_t off = 0; off < len; off += AES_BLOCK_SIZE) {
++            if (s->block_mode == QCRYPTO_CIPHER_MODE_CBC) {
++                uint8_t block[AES_BLOCK_SIZE];
++                const uint8_t *iv_bytes = (const uint8_t *)s->iv[ctxt_iv].iv;
++                for (int i = 0; i < AES_BLOCK_SIZE; i++) {
++                    block[i] = src->data[off + i] ^ iv_bytes[i];
++                }
++                AES_encrypt(block, dst->data + off, &aes_key);
++                memcpy(s->iv[ctxt_iv].iv, dst->data + off, AES_BLOCK_SIZE);
++            } else {
++                AES_encrypt(src->data + off, dst->data + off, &aes_key);
++            }
++        }
+     } else {
+-        if (qcrypto_cipher_decrypt(cipher, src->data, dst->data, len, NULL) != 0) {
+-            qemu_log_mask(LOG_GUEST_ERROR, "%s: Decryption failed\n", __func__);
++        if (AES_set_decrypt_key(s->key[ctxt_key].key,
++                                s->key[ctxt_key].key_len * 8, &aes_key) != 0) {
++            qemu_log_mask(LOG_GUEST_ERROR, "%s: Failed to set decrypt key\n",
++                          __func__);
+             return false;
+         }
++        for (uint32_t off = 0; off < len; off += AES_BLOCK_SIZE) {
++            if (s->block_mode == QCRYPTO_CIPHER_MODE_CBC) {
++                uint8_t next_iv[AES_BLOCK_SIZE];
++                uint8_t *iv_bytes = (uint8_t *)s->iv[ctxt_iv].iv;
++                memcpy(next_iv, src->data + off, AES_BLOCK_SIZE);
++                AES_decrypt(src->data + off, dst->data + off, &aes_key);
++                for (int i = 0; i < AES_BLOCK_SIZE; i++) {
++                    dst->data[off + i] ^= iv_bytes[i];
++                }
++                memcpy(s->iv[ctxt_iv].iv, next_iv, AES_BLOCK_SIZE);
++            } else {
++                AES_decrypt(src->data + off, dst->data + off, &aes_key);
++            }
++        }
+     }
+ 
+     dump_data("cmd_data(): dst_data=", dst->data, len);
+@@ -427,6 +436,9 @@ static void fifo_process(AESState *s)
+     case CMD_IV:
+         success = cmd_iv(s);
+         break;
++    case CMD_DSB:
++        success = true;
++        break;
+     case CMD_DATA:
+         success = cmd_data(s);
+         break;
+@@ -438,6 +450,7 @@ static void fifo_process(AESState *s)
+         break;
+     default:
+         s->irq_status |= REG_IRQ_STATUS_INVALID_CMD;
++        s->fifo_idx = 0;
+         break;
+     }
+ 
+@@ -455,12 +468,17 @@ static void aes1_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
+     trace_aes_write(offset, val);
+ 
+     switch (offset) {
++    case 0x8:
++        break;
+     case REG_IRQ_STATUS:
+         s->irq_status &= ~val;
+         break;
+     case REG_IRQ_ENABLE:
+         s->irq_enable = val;
+         break;
++    case REG_WATERMARK:
++        s->watermark = val;
++        break;
+     case REG_FIFO:
+         fifo_append(s, val);
+         fifo_process(s);
+diff --git a/hw/vmapple/bdif.c b/hw/vmapple/bdif.c
+index 4dc10c151d..1647515fa1 100644
+--- a/hw/vmapple/bdif.c
++++ b/hw/vmapple/bdif.c
+@@ -189,7 +189,15 @@ static void vblk_cmd(uint64_t devid, BlockBackend *blk, uint64_t gp_addr,
+         }
+         break;
+     case VBLK_DATA_FLAGS_WRITE:
+-        /* Not needed, iBoot only reads */
++        dma_result = dma_memory_read(&address_space_memory, req.data.addr, buf,
++                                     req.data.len, MEMTXATTRS_UNSPECIFIED);
++        if (dma_result != MEMTX_OK) {
++            goto out;
++        }
++        r = blk_pwrite(blk, off, req.data.len, buf, 0);
++        if (r >= 0) {
++            ret = VBLK_RET_SUCCESS;
++        }
+         break;
+     default:
+         break;
+@@ -250,11 +258,32 @@ static const Property bdif_properties[] = {
+     DEFINE_PROP_DRIVE("root", VMAppleBdifState, root),
+ };
+ 
++static void bdif_realize(DeviceState *dev, Error **errp)
++{
++    VMAppleBdifState *s = VMAPPLE_BDIF(dev);
++
++    if (s->aux) {
++        uint64_t perm = BLK_PERM_CONSISTENT_READ |
++                        (blk_supports_write_perm(s->aux) ? BLK_PERM_WRITE : 0);
++        if (blk_set_perm(s->aux, perm, BLK_PERM_ALL, errp) < 0) {
++            return;
++        }
++    }
++    if (s->root) {
++        uint64_t perm = BLK_PERM_CONSISTENT_READ |
++                        (blk_supports_write_perm(s->root) ? BLK_PERM_WRITE : 0);
++        if (blk_set_perm(s->root, perm, BLK_PERM_ALL, errp) < 0) {
++            return;
++        }
++    }
++}
++
+ static void bdif_class_init(ObjectClass *klass, const void *data)
+ {
+     DeviceClass *dc = DEVICE_CLASS(klass);
+ 
+     dc->desc = "VMApple Backdoor Interface";
++    dc->realize = bdif_realize;
+     device_class_set_props(dc, bdif_properties);
+ }
+ 
+diff --git a/hw/vmapple/cfg.c b/hw/vmapple/cfg.c
+index 2a3204f0ec..65c5617554 100644
+--- a/hw/vmapple/cfg.c
++++ b/hw/vmapple/cfg.c
+@@ -19,7 +19,7 @@
+ 
+ OBJECT_DECLARE_SIMPLE_TYPE(VMAppleCfgState, VMAPPLE_CFG)
+ 
+-#define VMAPPLE_CFG_SIZE 0x00010000
++#define VMAPPLE_CFG_SIZE 0x00100000
+ 
+ typedef struct VMAppleCfg {
+     uint32_t version;         /* 0x000 */
+diff --git a/hw/vmapple/vmapple.c b/hw/vmapple/vmapple.c
+index 2e055b01bd..39bc94cab7 100644
+--- a/hw/vmapple/vmapple.c
++++ b/hw/vmapple/vmapple.c
+@@ -26,6 +26,7 @@
+ #include "qemu/module.h"
+ #include "qemu/option.h"
+ #include "qemu/units.h"
++#include "hw/arm/bsa.h"
+ #include "monitor/qdev.h"
+ #include "hw/core/boards.h"
+ #include "hw/core/irq.h"
+@@ -49,13 +50,19 @@
+ #include "qobject/qlist.h"
+ #include "standard-headers/linux/input.h"
+ #include "system/hvf.h"
++#ifdef CONFIG_HVF
+ #include "system/hvf_int.h"
++#endif
+ #include "system/reset.h"
+ #include "system/runstate.h"
+ #include "system/system.h"
++#include "system/tcg.h"
+ #include "target/arm/gtimer.h"
+ #include "target/arm/cpu.h"
++#include "target/arm/cpu-features.h"
++#ifdef CONFIG_HVF
+ #include "target/arm/hvf_arm.h"
++#endif
+ 
+ struct VMAppleMachineState {
+     MachineState parent;
+@@ -71,6 +78,7 @@ struct VMAppleMachineState {
+     PCIBus *bus;
+     MemoryRegion fw_mr;
+     MemoryRegion ecam_alias;
++    MemoryRegion avp_stub_mr;
+     uint64_t uuid;
+     char *tablet;
+ };
+@@ -81,6 +89,9 @@ OBJECT_DECLARE_SIMPLE_TYPE(VMAppleMachineState, VMAPPLE_MACHINE)
+ /* Number of external interrupt lines to configure the GIC with */
+ #define NUM_IRQS 256
+ 
++/* The virtual platform timebase runs at 24 MHz. */
++#define VMAPPLE_TIMEBASE_HZ 24000000
++
+ enum {
+     VMAPPLE_FIRMWARE,
+     VMAPPLE_CONFIG,
+@@ -99,13 +110,14 @@ enum {
+     VMAPPLE_APV_IOSFC,
+     VMAPPLE_AES_1,
+     VMAPPLE_AES_2,
++    VMAPPLE_AVP_STUB,
+     VMAPPLE_BDOOR,
+     VMAPPLE_MEMMAP_LAST,
+ };
+ 
+ static const MemMapEntry memmap[] = {
+     [VMAPPLE_FIRMWARE] =           { 0x00100000, 0x00100000 },
+-    [VMAPPLE_CONFIG] =             { 0x00400000, 0x00010000 },
++    [VMAPPLE_CONFIG] =             { 0x00400000, 0x00100000 },
+ 
+     [VMAPPLE_GIC_DIST] =           { 0x10000000, 0x00010000 },
+     [VMAPPLE_GIC_REDIST] =         { 0x10010000, 0x00400000 },
+@@ -120,6 +132,7 @@ static const MemMapEntry memmap[] = {
+     [VMAPPLE_APV_IOSFC] =          { 0x30210000, 0x00010000 },
+     [VMAPPLE_AES_1] =              { 0x30220000, 0x00004000 },
+     [VMAPPLE_AES_2] =              { 0x30230000, 0x00004000 },
++    [VMAPPLE_AVP_STUB] =           { 0x30240000, 0x00040000 },
+     [VMAPPLE_PCIE_ECAM] =          { 0x40000000, 0x10000000 },
+     [VMAPPLE_PCIE_MMIO] =          { 0x50000000, 0x1fff0000 },
+ 
+@@ -237,6 +250,45 @@ static void create_aes(VMAppleMachineState *vms, MemoryRegion *mem)
+     sysbus_realize_and_unref(aes, &error_fatal);
+ }
+ 
++/*
++ * The guest touches devices at 0x30240000 (an AES-like block) and
++ * 0x30260000 (RRTC) that this machine does not model. HVF lets such
++ * accesses through; TCG raises an external abort, so back the window with
++ * a stub that reads zero and ignores writes.
++ */
++static uint64_t avp_stub_read(void *opaque, hwaddr offset, unsigned size)
++{
++    return 0;
++}
++
++static void avp_stub_write(void *opaque, hwaddr offset, uint64_t value,
++                           unsigned size)
++{
++}
++
++static const MemoryRegionOps avp_stub_ops = {
++    .read = avp_stub_read,
++    .write = avp_stub_write,
++    .endianness = DEVICE_LITTLE_ENDIAN,
++    .valid = {
++        .min_access_size = 1,
++        .max_access_size = 8,
++    },
++    .impl = {
++        .min_access_size = 1,
++        .max_access_size = 8,
++    },
++};
++
++static void create_avp_stub(VMAppleMachineState *vms, MemoryRegion *mem)
++{
++    memory_region_init_io(&vms->avp_stub_mr, OBJECT(vms), &avp_stub_ops, NULL,
++                          "vmapple-avp-stub",
++                          vms->memmap[VMAPPLE_AVP_STUB].size);
++    memory_region_add_subregion(mem, vms->memmap[VMAPPLE_AVP_STUB].base,
++                                &vms->avp_stub_mr);
++}
++
+ static int arm_gic_ppi_index(int cpu_nr, int ppi_index)
+ {
+     return NUM_IRQS + cpu_nr * GIC_INTERNAL + ppi_index;
+@@ -280,11 +332,37 @@ static void create_gic(VMAppleMachineState *vms, MemoryRegion *mem)
+      */
+     for (i = 0; i < smp_cpus; i++) {
+         DeviceState *cpudev = DEVICE(qemu_get_cpu(i));
++        const int timer_irq[] = {
++            [GTIMER_PHYS] = ARCH_TIMER_NS_EL1_IRQ,
++            [GTIMER_VIRT] = ARCH_TIMER_VIRT_IRQ,
++            [GTIMER_HYP]  = ARCH_TIMER_NS_EL2_IRQ,
++            [GTIMER_SEC]  = ARCH_TIMER_S_EL1_IRQ,
++        };
++        int timer;
+ 
+-        /* Map the virt timer to PPI 27 */
+-        qdev_connect_gpio_out(cpudev, GTIMER_VIRT,
+-                              qdev_get_gpio_in(vms->gic,
+-                                               arm_gic_ppi_index(i, 27)));
++        /*
++         * Map the virt timer to PPI 27. Under TCG also wire the other
++         * generic timers, the GIC maintenance interrupt and the PMU, which
++         * the guest uses there.
++         */
++        for (timer = 0; timer < ARRAY_SIZE(timer_irq); timer++) {
++            if (timer != GTIMER_VIRT && !tcg_enabled()) {
++                continue;
++            }
++            qdev_connect_gpio_out(cpudev, timer,
++                                  qdev_get_gpio_in(vms->gic,
++                                      arm_gic_ppi_index(i, timer_irq[timer])));
++        }
++        if (tcg_enabled()) {
++            qdev_connect_gpio_out_named(cpudev, "gicv3-maintenance-interrupt",
++                                        0, qdev_get_gpio_in(vms->gic,
++                                            arm_gic_ppi_index(i,
++                                                ARCH_GIC_MAINT_IRQ)));
++            qdev_connect_gpio_out_named(cpudev, "pmu-interrupt", 0,
++                                        qdev_get_gpio_in(vms->gic,
++                                            arm_gic_ppi_index(i,
++                                                VIRTUAL_PMU_IRQ)));
++        }
+ 
+         /* Map the GIC IRQ and FIQ lines to CPU */
+         sysbus_connect_irq(gicbusdev, i, qdev_get_gpio_in(cpudev, ARM_CPU_IRQ));
+@@ -461,6 +539,7 @@ static void create_pcie(VMAppleMachineState *vms)
+     }
+ }
+ 
++#ifdef CONFIG_HVF
+ /*
+  * macOS 14 and later need two changes to the kernel's memory to boot here,
+  * made when iBoot enters the kernel. From reset, RAM is not executable: each
+@@ -601,6 +680,7 @@ static bool vmapple_exec_fault(CPUState *cpu, hwaddr ipa)
+                                 HV_MEMORY_EXEC));
+     return true;
+ }
++#endif /* CONFIG_HVF */
+ 
+ static void vmapple_reset(void *opaque)
+ {
+@@ -608,10 +688,19 @@ static void vmapple_reset(void *opaque)
+     hwaddr base = vms->memmap[VMAPPLE_FIRMWARE].base;
+ 
+     cpu_set_pc(first_cpu, base);
+-    hvf_arm_exec_fault = vmapple_exec_fault;
+-    assert_hvf_ok(hv_vm_protect(vms->memmap[VMAPPLE_MEM].base,
+-                                MACHINE(vms)->ram_size,
+-                                HV_MEMORY_READ | HV_MEMORY_WRITE));
++#ifdef CONFIG_HVF
++    /*
++     * Under TCG the kernel's pointer authentication calls are answered in
++     * target/arm/tcg/psci.c, and macOS 15's DoNotUseSEP comes from the
++     * boot arguments, so neither kernel change is made there.
++     */
++    if (hvf_enabled()) {
++        hvf_arm_exec_fault = vmapple_exec_fault;
++        assert_hvf_ok(hv_vm_protect(vms->memmap[VMAPPLE_MEM].base,
++                                    MACHINE(vms)->ram_size,
++                                    HV_MEMORY_READ | HV_MEMORY_WRITE));
++    }
++#endif
+ }
+ 
+ static void mach_vmapple_init(MachineState *machine)
+@@ -641,6 +730,24 @@ static void mach_vmapple_init(MachineState *machine)
+         object_property_set_int(cpu, "mp-affinity",
+                                 possible_cpus->cpus[n].arch_id, &error_fatal);
+ 
++        if (tcg_enabled()) {
++            ARMCPU *arm_cpu = ARM_CPU(cpu);
++            uint64_t isar1 = GET_IDREG(&arm_cpu->isar, ID_AA64ISAR1);
++
++            /*
++             * The virtual platform exposes the original pointer
++             * authentication architecture, without the later faulting
++             * authentication extensions advertised by the TCG max CPU,
++             * and an implementation-defined cipher TCG cannot model.
++             */
++            isar1 = FIELD_DP64(isar1, ID_AA64ISAR1, APA, 1);
++            isar1 = FIELD_DP64(isar1, ID_AA64ISAR1, API, 1);
++            SET_IDREG(&arm_cpu->isar, ID_AA64ISAR1, isar1);
++            arm_cpu->pauth_impdef_compat = true;
++            object_property_set_int(cpu, "cntfrq", VMAPPLE_TIMEBASE_HZ,
++                                    &error_fatal);
++        }
++
+         cs = CPU(cpu);
+         cs->cpu_index = n;
+ 
+@@ -687,6 +794,7 @@ static void mach_vmapple_init(MachineState *machine)
+     create_bdif(vms, sysmem);
+     create_pvpanic(vms, sysmem);
+     create_aes(vms, sysmem);
++    create_avp_stub(vms, sysmem);
+     create_gfx(vms, sysmem);
+     create_uart(vms, VMAPPLE_UART, sysmem, serial_hd(0));
+     create_rtc(vms);
+@@ -771,6 +879,12 @@ static GlobalProperty vmapple_compat_defaults[] = {
+      * capabilities are linked from high offsets to low.
+      */
+     { "virtio-net-pci-base", "x-ascending-capabilities", "on" },
++    { "virtio-sound-pci", "x-ascending-capabilities", "on" },
++    /*
++     * One channel map per stream (stereo output, stereo input), which
++     * AppleVirtIOSound reads while it starts.
++     */
++    { "virtio-sound-device", "chmaps", "2" },
+ };
+ 
+ static char *vmapple_get_tablet(Object *obj, Error **errp)
+@@ -794,6 +908,12 @@ static void vmapple_set_tablet(Object *obj, const char *value, Error **errp)
+     vms->tablet = g_strdup(value);
+ }
+ 
++static const char *vmapple_get_default_cpu_type(const MachineState *ms)
++{
++    return tcg_enabled() ? ARM_CPU_TYPE_NAME("max")
++                         : ARM_CPU_TYPE_NAME("host");
++}
++
+ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+ {
+     MachineClass *mc = MACHINE_CLASS(oc);
+@@ -806,7 +926,7 @@ static void vmapple_machine_class_init(ObjectClass *oc, const void *data)
+     mc->minimum_page_bits = 12;
+     mc->possible_cpu_arch_ids = vmapple_possible_cpu_arch_ids;
+     mc->cpu_index_to_instance_props = vmapple_cpu_index_to_props;
+-    mc->default_cpu_type = ARM_CPU_TYPE_NAME("host");
++    mc->get_default_cpu_type = vmapple_get_default_cpu_type;
+     mc->get_default_cpu_node_id = vmapple_get_default_cpu_node_id;
+     mc->get_vgic_bases = vmapple_get_vgic_bases;
+     mc->default_ram_id = "mach-vmapple.ram";
+diff --git a/include/hw/audio/virtio-snd.h b/include/hw/audio/virtio-snd.h
+index 384d2868c1..b0b7aaa4a9 100644
+--- a/include/hw/audio/virtio-snd.h
++++ b/include/hw/audio/virtio-snd.h
+@@ -67,6 +67,9 @@ typedef struct virtio_snd_pcm_xfer virtio_snd_pcm_xfer;
+ /* I/O request status */
+ typedef struct virtio_snd_pcm_status virtio_snd_pcm_status;
+ 
++/* channel map information */
++typedef struct virtio_snd_chmap_info virtio_snd_chmap_info;
++
+ /* device structs */
+ 
+ typedef struct VirtIOSound VirtIOSound;
+diff --git a/meson.build b/meson.build
+index 4fa0b99332..4bc90eb8e8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -3422,9 +3422,13 @@ foreach target : target_dirs
+     # PVG is not cross-architecture: the library sizes the guest's pages
+     # for the host's architecture.  Use accelerator_targets as a proxy to
+     # figure out which target can support PVG on this host: HVF's on macOS,
+-    # KVM's on Linux.
++    # KVM's on Linux.  An arm64 vmapple guest also runs under TCG on an
++    # x86-64 Linux host, on a library built for 16 KiB guest pages
++    # (RVG_GUEST_PAGE_SHIFT=14).
+     if pvg.found() and (target in accelerator_targets.get('CONFIG_HVF', []) or
+-                        target in accelerator_targets.get('CONFIG_KVM', []))
++                        target in accelerator_targets.get('CONFIG_KVM', []) or
++                        (host_os == 'linux' and have_tcg and
++                         target == 'aarch64-softmmu'))
+       target_kconfig += 'CONFIG_MAC_PVG=y'
+     endif
+ 
+diff --git a/target/arm/cpu.h b/target/arm/cpu.h
+index 3b541f2465..5539566672 100644
+--- a/target/arm/cpu.h
++++ b/target/arm/cpu.h
+@@ -1151,6 +1151,7 @@ struct ArchCPU {
+     bool prop_pauth_impdef;
+     bool prop_pauth_qarma3;
+     bool prop_pauth_qarma5;
++    bool pauth_impdef_compat;
+     bool prop_lpa2;
+ 
+     /*
+diff --git a/target/arm/tcg/pauth_helper.c b/target/arm/tcg/pauth_helper.c
+index 3d83ca4c3c..a7b24ae124 100644
+--- a/target/arm/tcg/pauth_helper.c
++++ b/target/arm/tcg/pauth_helper.c
+@@ -315,9 +315,21 @@ static uint64_t pauth_computepac_impdef(uint64_t data, uint64_t modifier,
+ static uint64_t pauth_computepac(CPUARMState *env, uint64_t data,
+                                  uint64_t modifier, ARMPACKey key)
+ {
+-    if (cpu_isar_feature(aa64_pauth_qarma5, env_archcpu(env))) {
++    ARMCPU *cpu = env_archcpu(env);
++
++    /*
++     * Keep signatures stable across vCPUs when the guest's implementation-
++     * defined cipher and key registers are not available to TCG.  A fixed
++     * emulation key preserves pointer identity and integrity round trips;
++     * authentication below still strips the guest's original signatures.
++     */
++    if (cpu->pauth_impdef_compat) {
++        return pauth_computepac_impdef(data, modifier, (ARMPACKey) { 0 });
++    }
++
++    if (cpu_isar_feature(aa64_pauth_qarma5, cpu)) {
+         return pauth_computepac_architected(data, modifier, key, false);
+-    } else if (cpu_isar_feature(aa64_pauth_qarma3, env_archcpu(env))) {
++    } else if (cpu_isar_feature(aa64_pauth_qarma3, cpu)) {
+         return pauth_computepac_architected(data, modifier, key, true);
+     } else {
+         return pauth_computepac_impdef(data, modifier, key);
+@@ -429,6 +441,16 @@ static uint64_t pauth_auth(CPUARMState *env, uint64_t ptr, uint64_t modifier,
+     uint64_t pac, orig_ptr, cmp_mask;
+ 
+     orig_ptr = pauth_original_ptr(ptr, param);
++
++    /*
++     * Some virtual platforms use an implementation-defined PAC cipher which
++     * is not available to TCG.  They may opt into authentication bypass while
++     * retaining architectural pointer stripping behavior.
++     */
++    if (cpu->pauth_impdef_compat) {
++        return orig_ptr;
++    }
++
+     pac = pauth_computepac(env, orig_ptr, modifier, *key);
+     bot_bit = 64 - param.tsz;
+     top_bit = 64 - 8 * param.tbi;
+diff --git a/target/arm/tcg/psci.c b/target/arm/tcg/psci.c
+index 56754bde95..4ed65e7cd7 100644
+--- a/target/arm/tcg/psci.c
++++ b/target/arm/tcg/psci.c
+@@ -21,6 +21,7 @@
+ #include "helper.h"
+ #include "kvm-consts.h"
+ #include "qemu/main-loop.h"
++#include "system/memory.h"
+ #include "system/runstate.h"
+ #include "internals.h"
+ #include "arm-powerctl.h"
+@@ -203,6 +204,131 @@ void arm_handle_psci_call(ARMCPU *cpu)
+             break;
+         }
+         break;
++    case 0xc1000000: /* VMAPPLE_PAC_SET_INITIAL_STATE */
++        if (!is_a64(env) || !cpu->pauth_impdef_compat) {
++            ret = QEMU_PSCI_RET_NOT_SUPPORTED;
++            break;
++        }
++        if (env->xregs[20] != 0) {
++            const char *boot_args_env = g_getenv("QEMU_VMAPPLE_BOOT_ARGS");
++            uint32_t hdr = 0;
++
++            if (address_space_read(CPU(cpu)->as, env->xregs[20],
++                                   MEMTXATTRS_UNSPECIFIED, &hdr,
++                                   sizeof(hdr)) == MEMTX_OK &&
++                (hdr == 0x00020002U || hdr == 0x00020003U)) {
++                uint64_t virt_base = 0, phys_base = 0, dt_virt = 0;
++                uint32_t dt_len = 0;
++
++                if (boot_args_env && boot_args_env[0] != '\0') {
++                    char cmdline[608] = { 0 };
++                    g_strlcpy(cmdline, boot_args_env, sizeof(cmdline));
++                    address_space_write(CPU(cpu)->as, env->xregs[20] + 108,
++                                        MEMTXATTRS_UNSPECIFIED, cmdline,
++                                        sizeof(cmdline));
++                }
++
++                if (address_space_read(CPU(cpu)->as, env->xregs[20] + 8,
++                                       MEMTXATTRS_UNSPECIFIED, &virt_base,
++                                       sizeof(virt_base)) == MEMTX_OK &&
++                    address_space_read(CPU(cpu)->as, env->xregs[20] + 16,
++                                       MEMTXATTRS_UNSPECIFIED, &phys_base,
++                                       sizeof(phys_base)) == MEMTX_OK &&
++                    address_space_read(CPU(cpu)->as, env->xregs[20] + 96,
++                                       MEMTXATTRS_UNSPECIFIED, &dt_virt,
++                                       sizeof(dt_virt)) == MEMTX_OK &&
++                    address_space_read(CPU(cpu)->as, env->xregs[20] + 104,
++                                       MEMTXATTRS_UNSPECIFIED, &dt_len,
++                                       sizeof(dt_len)) == MEMTX_OK &&
++                    dt_virt >= virt_base &&
++                    dt_len > 64 && dt_len <= 0x400000U) {
++                    hwaddr dt_phys = dt_virt - virt_base + phys_base;
++                    uint8_t *dt_buf = g_malloc(dt_len);
++                    static const uint8_t iuou_pat[36] =
++                        "internal-use-only-unit\0\0\0\0\0\0\0\0\0\0"
++                        "\x04\x00\x00\x00";
++
++                    if (address_space_read(CPU(cpu)->as, dt_phys,
++                                           MEMTXATTRS_UNSPECIFIED, dt_buf,
++                                           dt_len) == MEMTX_OK) {
++                        for (uint32_t off = 0; off + 40 <= dt_len; off += 4) {
++                            if (memcmp(dt_buf + off, iuou_pat,
++                                       sizeof(iuou_pat)) == 0) {
++                                uint32_t one = cpu_to_le32(1);
++                                address_space_write(CPU(cpu)->as,
++                                                    dt_phys + off + 36,
++                                                    MEMTXATTRS_UNSPECIFIED,
++                                                    &one, sizeof(one));
++                                break;
++                            }
++                        }
++                    }
++                    g_free(dt_buf);
++                }
++            }
++        }
++        env->keys.apia.lo = 0xfeedfacefeedfad5ULL;
++        env->keys.apia.hi = 0xfeedfacefeedfad6ULL;
++        env->keys.apda.lo = 0xfeedfacefeedfad7ULL;
++        env->keys.apda.hi = 0xfeedfacefeedfad8ULL;
++        env->keys.apib.lo = 0xfeedfacefeedfacfULL;
++        env->keys.apib.hi = 0xfeedfacefeedfad0ULL;
++        env->keys.apdb.lo = 0xfeedfacefeedfad1ULL;
++        env->keys.apdb.hi = 0xfeedfacefeedfad2ULL;
++        env->keys.apga.lo = 0xfeedfacefeedfad9ULL;
++        env->keys.apga.hi = 0xfeedfacefeedfadaULL;
++        ret = 0;
++        break;
++    case 0xc1000001: /* VMAPPLE_PAC_GET_DEFAULT_KEYS */
++        if (!is_a64(env) || !cpu->pauth_impdef_compat) {
++            ret = QEMU_PSCI_RET_NOT_SUPPORTED;
++            break;
++        }
++        env->xregs[1] = 0xfeedfacefeedfad5ULL; /* DEFAULT_A_KEY */
++        env->xregs[2] = 0xfeedfacefeedfacfULL; /* DEFAULT_B_KEY */
++        env->xregs[3] = 0xfeedfacefeedfad3ULL; /* DEFAULT_EL0_KEY */
++        env->xregs[4] = 0xfeedfacefeedfad9ULL; /* DEFAULT_G_KEY */
++        ret = 0;
++        break;
++    case 0xc1000002: /* VMAPPLE_PAC_SET_A_KEYS */
++        if (!is_a64(env) || !cpu->pauth_impdef_compat) {
++            ret = QEMU_PSCI_RET_NOT_SUPPORTED;
++            break;
++        }
++        env->keys.apia.lo = param[1];
++        env->keys.apia.hi = param[1] + 1;
++        env->keys.apda.lo = param[1] + 2;
++        env->keys.apda.hi = param[1] + 3;
++        ret = 0;
++        break;
++    case 0xc1000003: /* VMAPPLE_PAC_SET_B_KEYS */
++        if (!is_a64(env) || !cpu->pauth_impdef_compat) {
++            ret = QEMU_PSCI_RET_NOT_SUPPORTED;
++            break;
++        }
++        env->keys.apib.lo = param[1];
++        env->keys.apib.hi = param[1] + 1;
++        env->keys.apdb.lo = param[1] + 2;
++        env->keys.apdb.hi = param[1] + 3;
++        ret = 0;
++        break;
++    case 0xc1000004: /* VMAPPLE_PAC_SET_EL0_KEY */
++    case 0xc1000005: /* VMAPPLE_PAC_SET_EL0_DIVERSIFIER_AT_EL1 */
++        if (!is_a64(env) || !cpu->pauth_impdef_compat) {
++            ret = QEMU_PSCI_RET_NOT_SUPPORTED;
++            break;
++        }
++        ret = 0;
++        break;
++    case 0xc1000006: /* VMAPPLE_PAC_SET_G_KEY */
++        if (!is_a64(env) || !cpu->pauth_impdef_compat) {
++            ret = QEMU_PSCI_RET_NOT_SUPPORTED;
++            break;
++        }
++        env->keys.apga.lo = param[1];
++        env->keys.apga.hi = param[1] + 1;
++        ret = 0;
++        break;
+     case QEMU_PSCI_0_1_FN_MIGRATE:
+     case QEMU_PSCI_0_2_FN_MIGRATE:
+     default:

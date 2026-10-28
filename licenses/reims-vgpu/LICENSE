@@ -1,0 +1,21 @@
+reims-vgpu is free software: you can redistribute it and/or modify it under
+the terms of either of these licenses, at your option:
+
+- the GNU General Public License, version 2, or (at your option) any later
+  version: LICENSES/GPL-2.0-or-later.txt;
+- the GNU Lesser General Public License, version 3, or (at your option) any
+  later version: LICENSES/LGPL-3.0-or-later.txt. The LGPL's version 3 is a
+  set of permissions added to the GNU General Public License, version 3,
+  whose text is LICENSES/GPL-3.0-or-later.txt.
+
+As an SPDX license expression: GPL-2.0-or-later OR LGPL-3.0-or-later.
+
+It is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the licenses for more details.
+
+This covers everything in the repository but QEMU, the submodule at
+vendor/qemu, which keeps QEMU's own licenses (its LICENSE and COPYING
+files). The crates the build takes, from crates.io and from the metal2vulkan
+repository, are not part of the repository, and each keeps its
+own license.

@@ -1,0 +1,40 @@
+module(
+    name = "qemu_remis_vgpu",
+    version = "0.1.0",
+)
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "keycodemapdb",
+    build_file = "//build_defs:source.BUILD.bazel",
+    sha256 = "d014b53382dbb17b8196ad12f50de7f20d0ef1b9f7d54b0be51a6cbb14209195",
+    strip_prefix = "keycodemapdb-f5772a62ec52591ff6870b7e8ef32482371f22c6",
+    type = "tar.gz",
+    urls = ["https://codeload.github.com/qemu/keycodemapdb/tar.gz/f5772a62ec52591ff6870b7e8ef32482371f22c6"],
+)
+
+http_archive(
+    name = "qemu",
+    build_file = "//build_defs:source.BUILD.bazel",
+    patch_args = ["-p1"],
+    # QEMU's vmapple machine and apple-gfx on the reims-vgpu C API, at the commit upstream
+    # reims-vgpu pins as vendor/qemu.
+    patches = ["//patches:qemu-goldengate.patch"],
+    sha256 = "5b3f2638ade2148878d8ef188b9a6dd2858eb87babae876e95a90640553d5582",
+    strip_prefix = "qemu-reims-vgpu-4895365e5bf9d344e494a39eceacb475079fedb5",
+    type = "tar.gz",
+    urls = ["https://codeload.github.com/steelbrain/qemu-reims-vgpu/tar.gz/4895365e5bf9d344e494a39eceacb475079fedb5"],
+)
+
+http_archive(
+    name = "remis_vgpu",
+    build_file = "//build_defs:source.BUILD.bazel",
+    patch_args = ["-p1"],
+    # Cargo fetches metal2vulkan at the commit the workspace's Cargo.toml and Cargo.lock name.
+    patches = ["//patches:reims-vgpu-goldengate.patch"],
+    sha256 = "51e829b2792f0189ae3129972ab8feba471cd9545b90f2ff4a14e39ac2e1e1ba",
+    strip_prefix = "reims-vgpu-12adb1fb46953ae55d4a7b2d66d9110bb19b0b1a",
+    type = "tar.gz",
+    urls = ["https://codeload.github.com/steelbrain/reims-vgpu/tar.gz/12adb1fb46953ae55d4a7b2d66d9110bb19b0b1a"],
+)

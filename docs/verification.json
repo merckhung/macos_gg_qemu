@@ -1,0 +1,2170 @@
+{
+  "build": "Bazel successfully built QEMU and the renderer from the current 122-path compact execution patch. All patched dependency sources match the tested candidate; artifact privacy and license collection passed. A fresh Vulkan/Lavapipe boot with validation reached compact resource preparation, then remained black after an impossible mapper width was decoded; the owned VM was stopped after evidence capture. Desktop and Dock acceptance remain unverified.",
+  "guest_kernel": "Darwin 27.0.0 / RELEASE_ARM64_VMAPPLE",
+  "backend": "Vulkan / Mesa Lavapipe",
+  "screenshots": {
+    "login.png": "aef4ced331010069fa28b39a45ecd52823420d5abd74573a876d176343f147b4",
+    "finder-progress.png": "682f786fbbcf3c8c9bd3414c0fc060cf5672a9db81041090f847cc2fa6fc8493",
+    "desktop-progress.png": "a007f77081a3b08c662d3fe77d7f0407e658d3c607c17ee92001387bb547ff47"
+  },
+  "desktop_verified": false,
+  "remaining": [
+    "build and live-check bounded compact GPU execution and info replies; extend supported resource families and queries as required by observed traffic",
+    "preserve sampled texture view/mip ranges and implement remaining native sampling contracts required by the desktop",
+    "Finder window, wallpaper, and widgets in the final build",
+    "Dock with fully rendered app icons",
+    "stable guest operation after desktop interaction"
+  ],
+  "user_clarification": "Docker means the macOS Dock; every Dock app icon must render correctly before the final local commit.",
+  "observations": [
+    "A prior boot displayed the Finder menu, desktop wallpaper, widgets, and Dock, with corrupted app icons.",
+    "The host shader compiler terminated QEMU with a half-float fragment-output LLVM selection error.",
+    "A matching output-interface fix from the supplied translator source passed its translator and Vulkan probe checks.",
+    "The rebuilt VM opened a Finder window with readable sidebar and toolbar. Dock icons remain partly corrupted; full desktop validation is pending.",
+    "A prior live guest displayed Golden Gate wallpaper, a Finder window, the Dock, and calendar/weather widget content. App icons and some glass effects remain corrupted; guest GPU restart attempts are recorded.",
+    "After displaying the desktop, the guest later panicked in SystemUIServer with an inactive IPC port; QMP reports shutdown. The host half-float LLVM abort did not recur.",
+    "The newer heap/native-format renderer candidate built successfully but its live boot currently shows a black display; private-plane query refusals and guest fence waits are recorded.",
+    "A private comparison clearing the unsupported Apple feature profile draws a transitional login wallpaper without the former private-plane query refusals; full desktop verification remains pending.",
+    "The private capability comparison authenticated and displayed wallpaper, widgets, Finder menus, and Dock placeholders. Every app icon is not yet correct, and a Finder window was not verified in this comparison.",
+    "The capability comparison later panicked with a guest allocation modified after free, following repeated GPU resets. Four Vulkan validation errors reported nonzero-offset sampling with pixel-coordinate samplers; investigation and live verification remain pending.",
+    "The last diagnostic boot, using an earlier revision, resolves every submitted object-table entry and reads 161 compact execute packets and one compact info packet without framing errors. Guest-write and guest-invalidation flags are present. Execution and query replies remain refused, so the display stays black. No guest panic, GPU restart or Vulkan validation error was observed before the diagnostic VM was stopped; this does not establish desktop acceptance."
+  ],
+  "candidate_checks": {
+    "half_output_regression": "fails before conversion fix, passes with fix",
+    "captured_shader_translation": {
+      "vertex": "passed",
+      "fragment": "passed",
+      "kernel": "passed",
+      "slowest_seconds": 0.1657,
+      "largest_sampled_group_peak_mib": 51.06,
+      "scope": "Three retained stage inputs from the fatal run; not a corpus-wide claim"
+    },
+    "asset_construction": "4 synthetic tests pass; supplied asset checksums reproduced",
+    "public_tree_privacy": "passed",
+    "translator_tests": {
+      "passed": 1859,
+      "failed": 0,
+      "ignored": 0
+    },
+    "validation_utility_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "strict_workspace_checks": "format, warnings-denied Clippy, and warnings-denied Rustdoc passed",
+    "vulkan_draw_regression": {
+      "half_output": "reproduced the same LLVM selection abort",
+      "widened_output": "draw completed with expected RGBA white pixel",
+      "scope": "Synthetic fragment-output interface probe on the selected Vulkan backend"
+    },
+    "final_bazel_build": "passed; home-path scan of QEMU and Rust artifacts passed",
+    "recovered_air_translation": {
+      "valid_recovered_inputs": 249,
+      "translations_passed": 249,
+      "resource_limit_breaches": 0,
+      "slowest_seconds": 4.595,
+      "largest_sampled_group_peak_mib": 78.58,
+      "scope": "Default entry points from privately recovered AIR modules; structural checks do not establish correct desktop pixels"
+    }
+  },
+  "renderer_candidate_checks": {
+    "release_build": "passed in isolated workspace",
+    "core_and_paging_tests_passed": 693,
+    "device_library": {
+      "passed": 2195,
+      "ignored": 1,
+      "validation_errors": 0
+    },
+    "vulkan_integration": {
+      "batch_passed": 19,
+      "compute_passed": 18,
+      "parity_passed": 66,
+      "ignored": 1,
+      "optional_capture_case_skipped": 1,
+      "validation_errors": 0
+    },
+    "readback_owner_regression": "fails before retaining replaced primary; passes afterward with no validation errors",
+    "format": "passed",
+    "strict_workspace_clippy": "passed",
+    "rustdoc_control": {
+      "baseline_diagnostics": 356,
+      "candidate_diagnostics": 356,
+      "new_diagnostics": 0
+    },
+    "workspace_library": {
+      "passed": 4138,
+      "failed": 0,
+      "ignored": 1,
+      "validation_errors": 0,
+      "scope": "Before the capability profile gate; the affected device library and compute suite were rerun afterward"
+    },
+    "private_format_regression": "fails with the unverified BGRA alias; passes with typed refusal across all roles",
+    "instance_extension_contract": "required surface extension admitted and enabled before swapchain devices; native device tests have no validation errors",
+    "vulkan_library_strict_rustdoc": "passed",
+    "feature_profile_gate": {
+      "before": "focused regression fails",
+      "after": "21 capability tests pass",
+      "scope": "Capability reply contract; does not prove rendered desktop pixels",
+      "affected_checks": {
+        "device-library": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 2196 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 8.20s"
+          ],
+          "validation_messages": 0
+        },
+        "compute-integration": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s"
+          ],
+          "validation_messages": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        },
+        "format": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        }
+      },
+      "bazel_build": "passed; QEMU, qemu-img, Rust archive, and dependency metadata pass broad private-home-path audit"
+    },
+    "artifact_privacy": "Unused eBPF/FUSE components disabled; renderer include directory remapped after generic prefixes. Synthetic compiler probe reproduces and removes the indirect cache identity. Extended rebuilt-artifact audit and publishable-tree privacy checks pass.",
+    "compute_pixel_samplers": {
+      "contract": "Pass checked dynamic pixel-sampler declarations into translator options and retain complete state in the collision-safe shader cache identity.",
+      "regression": "Authored nonzero-offset sample fails without sampler options, passes with expected blue texel through Vulkan.",
+      "affected_checks": {
+        "before": {
+          "returncode": 101,
+          "test_summary": [
+            "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2201 filtered out; finished in 0.06s"
+          ],
+          "validation_messages": 0
+        },
+        "after": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2201 filtered out; finished in 0.16s"
+          ],
+          "validation_messages": 0
+        },
+        "device-library": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 2201 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 7.00s"
+          ],
+          "validation_messages": 0
+        },
+        "compute-integration": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s"
+          ],
+          "validation_messages": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        },
+        "format": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        }
+      },
+      "captured_kernel_probe": {
+        "scope": "One privately captured dynamic-sampler kernel; controlled pixel-coordinate sampler 0 with nearest and linear filters, not a full-dispatch replay or desktop correctness claim.",
+        "results": [
+          {
+            "filter": "nearest",
+            "returncode": 0,
+            "breach": null,
+            "seconds": 0.1577,
+            "group_peak_mib": 22.254,
+            "image_fetches": 10,
+            "image_samples": 0,
+            "spirv_validation_returncode": 0
+          },
+          {
+            "filter": "linear",
+            "returncode": 0,
+            "breach": null,
+            "seconds": 0.193,
+            "group_peak_mib": 39.039,
+            "image_fetches": 40,
+            "image_samples": 0,
+            "spirv_validation_returncode": 0
+          }
+        ]
+      },
+      "bazel_build": "passed; QEMU, qemu-img, Rust archive, and dependency metadata pass broad private-home-prefix scan",
+      "live_verification": "Public Bazel run authenticated and reached Finder menus plus Keyboard Setup Assistant. Pixel-specialized offset kernel translated, but other helper-wrapped sampler inputs refused translation; repeated GPU resets began. VM paused with logs preserved. Full desktop and Dock correctness not achieved.",
+      "rustdoc_control": {
+        "baseline_diagnostics": 356,
+        "candidate_diagnostics": 356,
+        "new_diagnostics": 0,
+        "scope": "Same strict warnings and private-item documentation as the existing control; preexisting documentation errors remain."
+      },
+      "license_collection": "Refreshed from the completed Bazel outputs",
+      "test_feature_guard": "Vulkan execution regression and fixture require the Vulkan compile feature; focused Vulkan regression passes after this test-only guard. Production code matches the booted Bazel build byte-for-byte; final source rebuild pending.",
+      "pointer_wrapper_probe": {
+        "scope": "14 captured compute inputs, each with controlled nearest and linear pixel sampler 0; release workers include translation, SPIR-V validation, disassembly, and reporting under process-group guards.",
+        "attempts": 28,
+        "translation_refusals": 16,
+        "pointer_state_refusals": 16,
+        "resource_breaches": 0,
+        "slowest_seconds": 0.1901,
+        "largest_group_peak_mib": 44.695
+      }
+    },
+    "helper_wrapped_samplers": {
+      "contract": "Aggregate wrapper inference retains exact pointer-resource facts from the emitter instead of replacing them with integer storage carriers.",
+      "before": "Authored helper-aggregate regression fails with the same pointer-state refusal as the live guest.",
+      "after": "Authored helper-aggregate test passes. Vulkan execution reads the expected texel and preserves a live ordinary gain field.",
+      "translator_checks": {
+        "workspace-tests": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 1776 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.74s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.43s",
+            "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.11s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.01s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+            "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.94s",
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s",
+            "test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.80s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s",
+            "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+            "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+            "test result: ok. 160 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_messages": 5
+        },
+        "clippy": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        },
+        "rustdoc": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        },
+        "format": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        }
+      },
+      "renderer_checks": {
+        "gpu-regression": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2202 filtered out; finished in 0.16s"
+          ],
+          "validation_messages": 0
+        },
+        "device-library": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 2202 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.83s"
+          ],
+          "validation_messages": 0
+        },
+        "gpu-integration": {
+          "returncode": 0,
+          "test_summary": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.68s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s",
+            "test result: ok. 66 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 9.75s"
+          ],
+          "validation_messages": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        },
+        "format": {
+          "returncode": 0,
+          "test_summary": [],
+          "validation_messages": 0
+        }
+      },
+      "controlled_sampler_probes": {
+        "inputs": 14,
+        "attempts": 28,
+        "before_refusals": 16,
+        "after_refusals": 0,
+        "resource_breaches": 0,
+        "slowest_seconds": 0.1689,
+        "largest_group_peak_mib": 50.301,
+        "scope": "Controlled nearest and linear pixel sampler 0 for the captured compute family; release workers include translation and validation."
+      },
+      "fresh_air_comparison": {
+        "distinct_local_inputs": 624,
+        "baseline_passed": 621,
+        "candidate_passed": 621,
+        "malformed_capture_files_rejected_by_both": 3,
+        "translation_regressions": 0,
+        "resource_breaches": 0,
+        "slowest_seconds": 8.1149,
+        "largest_group_peak_mib": 97.266,
+        "scope": "Default entry points of every distinct AIR input in the local runtime collection, including the prior recovered set. Structural translation comparison does not establish correct desktop pixels."
+      },
+      "bazel_build": "passed; tested source matches patched Bazel dependencies; rebuilt QEMU and Rust artifacts pass extended private-path, cache-identity, scratch-path, and host-label audit",
+      "live_verification": "Corrected public build authenticated and displayed calendar/weather/Photos widgets and the Dock, but every app icon remained a placeholder, the desktop background stayed black, and a Finder window was not verified. The guest made 43 GPU restart attempts. No Vulkan validation errors or sampler-specialization refusals were observed. VM paused and evidence retained; desktop acceptance remains unmet.",
+      "license_collection": "Refreshed successfully after final privacy build"
+    },
+    "vertex_only_pipelines": {
+      "contract": "A nil Metal fragment function is valid. Carry actual stage absence through preflight, retained pipeline state and the Vulkan cache; disable shader color writes while preserving pass actions and vertex/depth/stencil execution.",
+      "checks": {
+        "loader-before": {
+          "returncode": 101,
+          "summaries": [
+            "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2203 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0
+        },
+        "format-write": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "regressions": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2203 filtered out; finished in 0.00s",
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 67 filtered out; finished in 0.10s"
+          ],
+          "validation_errors": 0
+        },
+        "device-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2203 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.27s"
+          ],
+          "validation_errors": 0
+        },
+        "gpu-integration": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.47s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 4.53s"
+          ],
+          "validation_errors": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        }
+      },
+      "scope": "Authored regression and renderer suites; live desktop outcome remains unverified. Native Metal optional-stage support is not established by these Vulkan checks.",
+      "bazel_build": "passed; rebuilt QEMU, qemu-img, renderer archive and dependency metadata pass private-identifier audit",
+      "rustdoc_control": {
+        "baseline_diagnostics": 356,
+        "candidate_diagnostics": 356,
+        "new_diagnostic_headlines": 0,
+        "scope": "Same strict private-item Rustdoc flags. Existing documentation errors remain."
+      },
+      "source_reproduction": "Patch applies cleanly and reproduces all 81 changed files; fetched Bazel source matches tested candidate byte-for-byte.",
+      "before_after": "The same valid serializer-object descriptor is rejected by the former loader and accepted after removing the fragment-function requirement.",
+      "live_verification": "Corrected public build authenticated to Finder menus. Keyboard Setup Assistant closed; calendar/weather/Photos widgets and Dock rendered. All 20 Dock app icons remain placeholders; desktop background is black; a Finder window was not verified. Two GPU restart attempts by the paused checkpoint; no Vulkan validation errors, sampler pointer refusals or former nil-fragment refusals. The next observed draw refusal is an RGBA16Unorm source that reaches unsupported CPU conversion. Desktop acceptance remains unmet.",
+      "license_collection": "Refreshed from the completed corrected Bazel outputs"
+    },
+    "normalized_sixteen_bit_uploads": {
+      "contract": "Preserve R16, RG16 and RGBA16 normalized linear samples in their native layouts when the host can sample and filter them. Do not route them into an unsupported or precision-losing CPU conversion.",
+      "before": "The authored RGBA16Unorm loader regression fails with RowConvertUnsupported for format 110, matching the format of the live sampled-texture failures.",
+      "after": "Loader tests preserve every channel bit. An authored Vulkan image-fetch probe samples actual loader output and verifies sixteen-bit normalized values against a float32 result.",
+      "checks": {
+        "format-write": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "regressions": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2204 filtered out; finished in 0.05s"
+          ],
+          "validation_errors": 0
+        },
+        "protocol-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 392 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.84s"
+          ],
+          "validation_errors": 0
+        },
+        "device-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2205 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.43s"
+          ],
+          "validation_errors": 0
+        },
+        "gpu-integration": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.59s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.09s"
+          ],
+          "validation_errors": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "protocol-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        }
+      },
+      "rustdoc_control": {
+        "protocol": {
+          "baseline_diagnostics": 1,
+          "candidate_diagnostics": 1,
+          "new_diagnostic_headlines": 0
+        },
+        "device": {
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": 0
+        },
+        "scope": "Same strict private-item Rustdoc flags. Existing upstream documentation errors remain; no suppression."
+      },
+      "scope": "Authored CPU/GPU and affected protocol/device suites. Fresh desktop verification is still required.",
+      "bazel_build": "passed; all 81 patched Bazel files match the tested candidate; QEMU, qemu-img, renderer archive and metadata pass extended private-identifier audit",
+      "live_verification": "Corrected public build authenticates and opens a Finder window. Utilities labels/sidebar, calendar/weather/Photos widgets, and Dock visible. Dock app icons remain generic and desktop background remains black. No GPU restart attempts or Vulkan validation errors observed. Repeated guest IOSurface fence waits and host release/write ordering diagnostics are recorded. Later mapped RG16Unorm sampling reaches the eight-bit capture path and is refused. The guest eventually displays a lock screen; subsequent unlock and Terminal diagnostics were not verified. Run preserved before testing the native mapped-texture loader. Desktop acceptance remains unmet.",
+      "license_collection": "Refreshed from corrected outputs: 34 Rust packages and 71 host package notices"
+    },
+    "native_mapped_texture_uploads": {
+      "contract": "Mapped sampled textures use the same host-gated native upload layouts as linear textures. Read the descriptor-owned offset and row stride through the mapping owner; preserve channel bits and source qualifiers. Settle mapping-scoped device writes before reading.",
+      "before": "The final authored fixture fails against the former mapped-texture conversion path at native sample resolution. This matches the RG16Unorm conversion refusals in the preserved guest run.",
+      "after": "R16Unorm, RG16Unorm and RGBA16Unorm samples preserve all channel bits across fragmented pages, nonzero surface offset, and padded rows. Unsupported native capability remains a refusal.",
+      "checks": {
+        "format-write": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "regressions": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2204 filtered out; finished in 0.06s"
+          ],
+          "validation_errors": 0
+        },
+        "protocol-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 392 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s"
+          ],
+          "validation_errors": 0
+        },
+        "device-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2206 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.70s"
+          ],
+          "validation_errors": 0
+        },
+        "gpu-integration": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 4.99s"
+          ],
+          "validation_errors": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "protocol-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        }
+      },
+      "control": {
+        "control_returncode": 101,
+        "same_final_fixture": true,
+        "failed_at_native_sample_expectation": true,
+        "source_restored_byte_for_byte": true,
+        "rustdoc": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": 0,
+          "scope": "Strict private-item Rustdoc; existing upstream documentation errors remain, no suppression."
+        }
+      },
+      "scope": "CPU owner regression and affected protocol/device suites plus serial Vulkan integration tests. Desktop outcome is not established by these checks.",
+      "bazel_build": "passed; all 81 patch paths including removals match the tested candidate; QEMU, qemu-img, renderer archive and metadata pass private-identifier audit",
+      "live_verification": "Fresh audited public Bazel build reaches the login screen and authenticates to Finder menus. The login screen renders the Golden Gate photograph, with corrupted clock glyphs. The desktop background remains black at this checkpoint; Keyboard Setup Assistant is visible. Desktop wallpaper, widgets and all Dock app icons still require verification. No GPU restart or Vulkan validation error observed at the checkpoint.",
+      "source_reproduction": "Patch applies and reproduces all 81 changed paths; fetched Bazel source matches the tested candidate byte-for-byte.",
+      "license_collection": "Refreshed from corrected Bazel outputs"
+    },
+    "golden_gate_protocol_investigation": {
+      "observed": "Current guest requests protocol 252; the host negotiates 62. Preserved guest logs show Metal texture-usage rejection immediately before repeated QuartzCore surface-texture allocation failures and icon flattening failures.",
+      "derived_contract": "The current guest enables TextureDescriptor2 at valid protocol levels 237, 238, 245, 250, 251 and 252. At level 62 the descriptor capability is disabled; the legacy constructor refuses usage masks requiring more than eight bits.",
+      "scope": "Protocol and serializer contract recovered through private local analysis and guest logs. This is evidence for a compatibility gap, not proof of repaired desktop pixels.",
+      "implementation": "Candidate now negotiates the implemented Descriptor2 level 237 through a typed protocol owner. Legacy requests retain their register values, unsupported intermediate requests select 62, and unimplemented optional execution features are withheld separately. Fresh rebuilt runtime verification is pending.",
+      "private_material": "Guest binaries, disassembly, identifiers and raw log records stay outside the public tree."
+    },
+    "golden_gate_descriptor2_protocol": {
+      "contract": "Golden Gate requests 252. Negotiate the implemented Descriptor2 level 237, preserve legacy requests, and never echo an unimplemented intermediate level. Carry the selected level in a typed protocol value. Keep optional backend execution capabilities separate from serializer representation support.",
+      "before": {
+        "returncode": 101,
+        "summaries": [
+          "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 2207 filtered out; finished in 0.00s"
+        ],
+        "expected_descriptor2_failure": true,
+        "expected_execution_capability_failure": true
+      },
+      "after": {
+        "returncode": 0,
+        "summaries": [
+          "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2207 filtered out; finished in 0.00s"
+        ]
+      },
+      "checks": {
+        "format-write": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "regressions": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2207 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0
+        },
+        "protocol-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 394 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.08s"
+          ],
+          "validation_errors": 0
+        },
+        "device-library": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2208 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 9.94s"
+          ],
+          "validation_errors": 0
+        },
+        "gpu-integration": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.80s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.59s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.01s"
+          ],
+          "validation_errors": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "protocol-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0
+        }
+      },
+      "rustdoc_control": {
+        "protocol": {
+          "returncode": 101,
+          "baseline_diagnostics": 1,
+          "candidate_diagnostics": 1,
+          "new_diagnostic_headlines": 0
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": 0
+        }
+      },
+      "native_wire_oracle": {
+        "returncode": 0,
+        "summaries": [
+          "test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+        ],
+        "scope": "Native wire-oracle integration is ignored on Linux: zero tests executed, two ignored. This is not passing oracle coverage. Authored resource decoder and protocol tests did execute in the device/protocol library suites."
+      },
+      "producer_contract_check": {
+        "cases": 7,
+        "result": "passed",
+        "scope": "Bounded CPU emulation of the guest Descriptor2 serializer with authored input values verifies the 32-bit usage field, pixel format, dimensions, swizzles and untouched declared tail. Existing authored decoder tests independently preserve high usage bits. This is not a native Metal or GPU oracle."
+      },
+      "capability_limits": "Programmable sample positions, tile shaders and imageblocks are not advertised. Command-buffer jumps, conditional compute control flow and compressed texture writes are removed from the execution feature word; predicated nesting is zero. Vertex amplification count and rasterization-rate limits remain constrained by separate device-info fields.",
+      "bazel_build": "passed; all 83 patch paths including removals match the tested candidate; QEMU, qemu-img, renderer archive and metadata pass private-identifier audit",
+      "live_verification": "Fresh audited public build confirms actual request 252 negotiates to 237. Boot exposes missing kernel submission contracts: child packets 0x43, 0x44 and 0x45 are refused by the unresolved ingress ledger, rendering does not progress, and unbacked presents repeat. Desktop acceptance fails. Recovering these packet/resource-heap formats is the next required implementation; serializer validation alone did not establish the kernel packet path.",
+      "scope": "Vulkan/Lavapipe owner and GPU integration tests. Native Metal compatibility and a native wire oracle were not established by these Linux checks.",
+      "source_reproduction": "Patch applies and reproduces all 83 changed paths; fetched Bazel source matches the tested candidate byte-for-byte.",
+      "license_collection": "Refreshed from corrected Bazel outputs"
+    },
+    "modern_object_table_binding": {
+      "scope": "Full-width object/placement binding and placement migration; no claim of completed compact execute/info support.",
+      "core_library": "640 passed",
+      "protocol_library": "400 passed",
+      "device_library": "2214 passed, 1 ignored",
+      "vulkan_integration": "104 passed, 1 ignored; serial execution; zero validation errors",
+      "strict_clippy": "core, protocol and Vulkan device passed",
+      "formatting": "passed",
+      "rustdoc": "No new diagnostics against preceding checks; existing protocol/core/device diagnostics remain (1/2/356). No suppression.",
+      "regressions": [
+        "Growing and shrinking placement tables preserve their common byte extent across fragmented pages on both page geometries.",
+        "Source read failure retains the prior binding; a later successful retry installs the replacement.",
+        "Destination re-point during copying cannot redirect writes into newly owned guest memory.",
+        "An admitted table packet that defers retains its original operation and ordering position without publishing completion.",
+        "Retry completes the placement copy before publishing the packet completion word.",
+        "Device loss or withdrawal prevents deferred work from re-entering a dead ordering position."
+      ],
+      "source_reproduction": "Current patch applies and reproduces all 94 changed paths exactly.",
+      "bazel_and_live": "Not yet run for this updated patch. Latest preserved boot remains a black-screen diagnostic run."
+    },
+    "compact_submission_inputs": {
+      "scope": "Input retention only; execute/info packets remain unresolved at ingress until resource preparation and query replies are implemented.",
+      "reader_contract": "Full command-buffer tables load atomically. An unreadable, empty or overflowing descriptor refuses the packet before any stream executes.",
+      "input_types": "Pending compact inputs retain execute versus info kind and resource flags in their separate paging/completion phases; they cannot be handed directly to ExecSubmission execution.",
+      "regressions": [
+        "Both page geometries retain ordered command streams at full-width guest virtual addresses across fragmented pages.",
+        "Retained bytes remain unchanged after guest memory is rewritten.",
+        "Unreadable later buffers never produce partial success.",
+        "Legacy submissions retain all 33 valid command buffers and refuse partially readable tables."
+      ],
+      "device_library": "2217 passed, 1 ignored",
+      "vulkan_integration": "104 passed, 1 ignored; serial; zero validation errors",
+      "strict_clippy_and_format": "passed",
+      "strict_rustdoc": "356 existing device diagnostics unchanged, no new diagnostics or suppression",
+      "bazel_and_live": "Pending for the updated patch."
+    },
+    "compact_unprepared_observation": {
+      "scope": "Read-only resource-kind, phase-flag and segment/record counts for unresolved compact execute/info packets; no execution or reply is admitted",
+      "protocol_tests_passed": 400,
+      "device_tests_passed": 2217,
+      "device_tests_ignored": 1,
+      "vulkan_tests_passed": 104,
+      "vulkan_tests_ignored": 1,
+      "validation_errors": 0,
+      "strict_clippy": "passed",
+      "format": "passed",
+      "bazel_build": "passed; fetched source matches all 94 candidate paths",
+      "live_validation": {
+        "scope": "Vulkan/Lavapipe; read-only inputs, no compact execution or query replies",
+        "execute_packets": 161,
+        "info_packets": 1,
+        "missing_object_table_entries": 0,
+        "input_refusals": 0,
+        "segment_or_record_framing_errors": 0,
+        "validation_errors": 0,
+        "guest_panics": 0,
+        "gpu_restart_attempts": 0,
+        "observed_resource_tags": [
+          1,
+          2,
+          3,
+          11
+        ],
+        "observed_info_query": "wide heap texture size and alignment (0x1d5)",
+        "observed_resource_phases": "guest writes before paging and guest invalidation after paging both occur",
+        "vm_stopped": true,
+        "desktop_verified": false
+      },
+      "artifact_privacy": "passed for QEMU, qemu-img, renderer archive and Cargo metadata"
+    },
+    "serialized_heap_texture_reply": {
+      "scope": "Narrow/wide heap-texture replies integrated with compact-info admission and parked execution for mapped CPU reply buffers with zero-phase residency; unsupported queries and other resource obligations refuse explicitly",
+      "forms": [
+        "narrow 0x1c3",
+        "wide 0x1d5"
+      ],
+      "regressions": "wide usage/full reply offset; fragmented pages at both geometries; buffer/allocation overflow; unmapped late page refuses before writes; remapped pages refuse and can retry; retired names and replaced allocations cannot receive stale replies",
+      "integration": "wired for supported CPU queries; live validation pending",
+      "bazel_build": "pending for this revision",
+      "live_validation": "pending for this revision",
+      "focused_tests_passed": 6,
+      "device_tests_passed": 2228,
+      "device_tests_ignored": 1,
+      "vulkan_integration_tests_passed": 104,
+      "validation_errors": 0,
+      "strict_clippy": "passed",
+      "format": "passed",
+      "rustdoc": {
+        "baseline_diagnostics": 356,
+        "candidate_diagnostics": 356,
+        "new_diagnostic_headlines": 0
+      }
+    },
+    "query_batch_completion": {
+      "scope": "Backend-independent batch owner and serial interpreter; compact packet admission is not yet implemented",
+      "core_tests_passed": 643,
+      "core_integration_tests_passed": 18,
+      "protocol_tests_passed": 400,
+      "device_tests_passed": 2224,
+      "device_tests_ignored": 1,
+      "vulkan_integration_tests_passed": 104,
+      "vulkan_integration_scope": "After the core query-batch changes; final reply-product changes affect CPU publication only and passed the device suite",
+      "validation_errors": 0,
+      "strict_clippy": "passed for core, protocol and device",
+      "format": "passed",
+      "checks": "late missing or malformed answers retain completion; retry publishes exact reply windows before one stamp; device loss revokes product authority before epoch recreation",
+      "rustdoc": {
+        "core_existing_diagnostics": 2,
+        "device_existing_diagnostics": 356,
+        "new_diagnostic_headlines": 0
+      },
+      "source_reproduction": "Patch applies and reproduces all 97 changed candidate paths",
+      "bazel_build": "pending for this revision",
+      "live_validation": "pending for this revision"
+    },
+    "compact_info_integration": {
+      "scope": "Vulkan/Lavapipe tests; supported CPU heap-texture info queries, not compact GPU execution or general info-query coverage",
+      "focused_tests_passed": 4,
+      "core_library_tests_passed": 643,
+      "core_integration_tests_passed": 18,
+      "protocol_tests_passed": 400,
+      "device_tests_passed": 2228,
+      "device_tests_ignored": 1,
+      "vulkan_integration_tests_passed": 104,
+      "vulkan_tests_ignored": 1,
+      "validation_errors": 0,
+      "strict_clippy": "passed for device, core and protocol",
+      "format": "passed",
+      "regressions": [
+        "reply writes precede the single completion stamp",
+        "a late remap retains input bytes and query progress for retry",
+        "unsupported late queries produce no replies or completion",
+        "rejected later work cannot publish a completion past pending work"
+      ],
+      "rejected_packet_completion": "removed the previous fallback that published unadmitted packet stamps",
+      "source_reproduction": "patch applies and reproduces all 99 changed candidate paths",
+      "bazel_build": "pending",
+      "live_validation": "pending",
+      "desktop_verified": false
+    },
+    "compact_resource_preparation": {
+      "scope": "Preparation state machine not yet integrated into Execute 0x43. Guest-write stale texture invalidation is integrated into the shared validity owner. No current Bazel or live desktop verification.",
+      "regression": "Stale linear texture regression fails before invalidation retires host content and passes after it. Resource lifetime and unrelated content remain intact; resident retirement is queued.",
+      "phase_order": "All guest writes, then preparation, then guest invalidation. Retain unfinished progress and post-execution sync obligations.",
+      "checks": {
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 2215 filtered out; finished in 0.01s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "core": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 647 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.96s",
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s",
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.80s",
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "protocol": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 400 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.47s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2229 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 14.31s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.57s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.82s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 9.05s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "core-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "protocol-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      }
+    },
+    "compact_resource_lifetimes": {
+      "scope": "Admission and Vulkan fence ownership for a retained execution resource table. Current legacy inputs leave this new table empty; compact resource preparation and Execute3 activation remain unfinished. Current source not built or booted through Bazel.",
+      "contracts": [
+        "All table resources add whole-resource dependencies independently of encoder references. A late resource-resolution failure leaves no partial footprint.",
+        "Original resource names must still be live at admission; retaining an object does not authorize use after its name retires.",
+        "A populated Vulkan submission resource table is retained in each command buffer cleanup until its fence retires; nested scopes restore their caller and failure unwinds scope state.",
+        "Resource destruction occurs outside the engine lock."
+      ],
+      "checks": {
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2229 filtered out; finished in 0.01s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "core": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 649 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.57s",
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+            "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s",
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.76s",
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "protocol": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 400 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.91s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2233 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 24.70s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.97s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.33s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 13.86s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "core-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "protocol-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      }
+    },
+    "paged_texture_storage": {
+      "scope": "Ordinary texture creation decoding and Vulkan native paged-level primitives. Compact preparation and runtime render/compute bindings are not connected; no current Bazel build or desktop result.",
+      "regression": {
+        "before": "Authored wide creation descriptor declaring pixel format 70 decoded as 1280; focused test failed.",
+        "after": "Opcode selects narrow/wide layout; complete creation metadata retained; recognized malformed records refuse."
+      },
+      "native_storage": {
+        "identity": "Constructed object lifetime and mip level; independent of reusable task references and guest virtual addresses.",
+        "upload": "Native bytes retained through submission fence; ready content tracked in existing render-target registry.",
+        "readback": "Native texel bytes preserved without presentation RGBA8 narrowing.",
+        "gpu_formats_tested": [
+          "RGBA8Unorm",
+          "BGRA8Unorm",
+          "RGBA16Float"
+        ],
+        "limits": [
+          "Private single-sample 2D textures with one array layer, in existing color-attachment formats only.",
+          "Each mip level currently has a separate native image.",
+          "No compact phase integration, binding integration, mip generation or requested synchronization yet."
+        ]
+      },
+      "checks": {
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2234 filtered out; finished in 0.09s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2238 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 11.28s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.68s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s",
+            "test result: ok. 67 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 8.24s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "source_reproduction": {
+        "changed_paths": 109,
+        "exact_match": true,
+        "patch_bytes": 923033
+      },
+      "source_privacy_check": "Passed; no detected private paths, cache identities, network addresses or patch mail headers."
+    },
+    "paged_texture_bindings": {
+      "scope": "Prepared paged resources use native render attachments, direct single-level samples and clear-only publication. Compact preparation, compute/blit bindings, sampled views and mip chains remain unfinished. No current Bazel build or live desktop result.",
+      "contracts": [
+        "Native content is owned by the constructed texture lifetime and level, independent of guest page availability.",
+        "Private render targets share the existing registry image populated by preparation and retained by the resource.",
+        "Direct single-level sampled binds use that image; multi-level paged sampling refuses explicitly.",
+        "Creation swizzles apply to image views; stored native bytes remain unchanged.",
+        "Clear-only passes submit native numeric clears through the selected backend and retain inputs through the fence."
+      ],
+      "regressions": [
+        "Runtime attachment and sample resolution survives removal of guest backing after upload.",
+        "A clear-only pass updates native content without guest output pages.",
+        "Vulkan upload, render, shader sample, clear and resample share one image; an authored wide creation descriptor supplies the checked channel swizzle."
+      ],
+      "checks": {
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2234 filtered out; finished in 0.12s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2240 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 10.81s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.65s",
+            "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.90s",
+            "test result: ok. 68 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 8.73s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "patch_changed_paths": 109,
+      "desktop_verified": false,
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 109,
+        "patch_bytes": 947094
+      },
+      "source_privacy_check": "Passed; no detected private paths, cache identities, network addresses or patch mail headers."
+    },
+    "paged_texture_compute": {
+      "scope": "Prepared private 2D paged compute inputs and native-level publication. Ordered readback/upload; no current Bazel or desktop result. Blit and compact execution remain pending.",
+      "contracts": [
+        "Retained native resource authority precedes guest row resolution.",
+        "Sampled bindings read every declared mip; storage names one level. Subsequent review restricts all prepared compute views; see paged_texture_compute_view_refusal.",
+        "Each ordered native snapshot keeps its texel format; compute storage output publishes to the same native owner used by rendering.",
+        "No independent compute residency may replace the native snapshot or suppress publication.",
+        "Unsupported reinterpretation and nonidentity creation swizzles refuse explicitly."
+      ],
+      "regressions": [
+        "Before-fix staging with removed guest backing fails with compute_stage_tex_linear_row_read.",
+        "After-fix staging preserves both mips without guest pages; storage publication updates only its named level and malformed byte lengths leave content unchanged.",
+        "Real Vulkan compute reads the upper mip, writes and publishes the base, and samples the new result."
+      ],
+      "checks": {
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2234 filtered out; finished in 0.12s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2241 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 10.84s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.38s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s",
+            "test result: ok. 68 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 7.45s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "desktop_verified": false,
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 109,
+        "patch_bytes": 964046
+      }
+    },
+    "paged_texture_blits": {
+      "scope": "Prepared private 2D paged texture rectangles and both buffer-copy directions. Mipmap generation and compact execution remain unfinished.",
+      "contracts": [
+        "Retained native level authority precedes guest object-list lookup.",
+        "Rectangle updates preserve surrounding pixels and other mip levels without texel conversion.",
+        "Buffer copies respect guest row padding and use one native read or update per rectangle.",
+        "Guest buffer destination-page bounds are captured before native readback waits."
+      ],
+      "regressions": [
+        "Before-fix copy without guest backing fails with tex_no_list_entry.",
+        "After-fix partial level-to-level copies preserve source, surrounding pixels and the other destination mip.",
+        "Padded buffer-to-texture and texture-to-buffer copies preserve RGBA8 and RGBA16Float bytes and padding."
+      ],
+      "checks": {
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2234 filtered out; finished in 0.47s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2242 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 26.74s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.70s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.89s",
+            "test result: ok. 68 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 16.20s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "desktop_verified": false,
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 110,
+        "patch_bytes": 986269,
+        "patch_sha256": "0a3970e89fa0c93d9b2b5d9c868299d46fe212a3ac6f9adc9e0ee468beb89107"
+      },
+      "source_privacy_check": "Passed after patch refresh and license collection."
+    },
+    "paged_native_bazel": {
+      "build": {
+        "returncode": 0,
+        "elapsed_seconds": 936.5
+      },
+      "revision": {
+        "patch_sha256": "014e492766be4e008073a56e2e9103c45763ab36222ef94e8daf8c0125fb6274",
+        "patch_bytes": 985702,
+        "changed_paths": 110,
+        "contains_final_compute_view_range_refusal": false
+      },
+      "artifact_privacy": [
+        {
+          "artifact": "qemu-system-aarch64",
+          "detected_private_build_identifiers": []
+        },
+        {
+          "artifact": "qemu-img",
+          "detected_private_build_identifiers": []
+        },
+        {
+          "artifact": "libreims_vgpu.a",
+          "detected_private_build_identifiers": []
+        },
+        {
+          "artifact": "cargo-metadata.json",
+          "detected_private_build_identifiers": []
+        }
+      ],
+      "license_collection": {
+        "returncode": 0
+      },
+      "source_comparison": {
+        "checked": 110,
+        "mismatches": 0
+      },
+      "scope": "Release build precedes the final compute-view range refusal. The current source passes device and Vulkan suites, Clippy and formatting; no current live boot."
+    },
+    "paged_texture_compute_view_refusal": {
+      "reason": "ViewResolve retains base level but not declared mip range; prepared paged compute views cannot safely be staged as a single level.",
+      "behavior": "Explicit compute_paged_view_range refusal before native reads or writes. Ordinary sampled textures retain full-mip staging.",
+      "regression": "The paged compute runtime regression asserts the refusal, alongside native storage publication and malformed-byte rejection.",
+      "checks": "The latest paged_texture_blits component suites include this guard.",
+      "bazel_rebuilt": false,
+      "desktop_verified": false
+    },
+    "native_mipmap_and_invalidation": {
+      "scope": "Prepared private single-sample 2D paged textures in color-attachment formats. Native mipmap filtering and guest-write invalidation are connected to runtime owners. Compact resource preparation and execution are still pending.",
+      "contracts": [
+        "Native mip filtering reuses the Vulkan owner's reduction rungs and measured BLIT_SRC, BLIT_DST and linear-filter support.",
+        "Each logical mip uses its own native image; barriers order reads after the preceding write, and submission fences retain inputs.",
+        "Level zero and native precision are preserved; unsupported filtering does not fall back to nearest or RGBA8.",
+        "Missing native base content refuses before claiming a new submission slot.",
+        "Guest CPU writes invalidate every retained paged level without releasing leases or changing the last GPU access.",
+        "Content epochs, sole-copy state and window publication are invalidated; validity booleans alone never restore native content.",
+        "Name deletion preserves content held by retained resource objects."
+      ],
+      "regressions": [
+        "Before-fix native mip generation fails with GuestIo after guest backing removal.",
+        "Half-float mip generation preserves values above 1.0, produces the expected 2.5 reduction and regenerates after a native clear.",
+        "Single-level, absent-base and unsupported-filter refusals preserve existing content.",
+        "Before-fix guest-write invalidation leaves old mip zero readable.",
+        "After-fix invalidation makes every level unreadable, preserves unrelated images, allows independent upload and regeneration, and retains content after name deletion.",
+        "Registry invalidation preserves access and resource owners while revoking cached publication."
+      ],
+      "checks": {
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 2235 filtered out; finished in 0.48s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2246 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 22.29s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.03s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.89s",
+            "test result: ok. 68 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 16.29s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "vulkan-owner": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 631 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.74s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "vulkan-mipmap-gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.18s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0,
+          "actual_gpu_execution_confirmed": true
+        },
+        "vulkan-owner-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "vulkan": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 112,
+        "patch_bytes": 1011724,
+        "patch_sha256": "6ddf2867954e62cec5c290cb2a81a2eba650079cdd3ccdb5501b1357ddca872b"
+      },
+      "bazel_rebuilt": false,
+      "desktop_verified": false
+    },
+    "synchronization_retry": {
+      "scope": "Named synchronization, writeback eviction, and guest readers and writers on the Vulkan pathway. Compact execution remains unadmitted; no current Bazel or live desktop validation.",
+      "finding": "Failed surface transfers discarded their debt and native content hold and advanced the guest-write witness; GVA backend failures were ignored. Synchronization could complete and discard transfer backing despite failure. Readers and writers also ignored unsuccessful payment.",
+      "contracts": [
+        "Failed surface and GVA transfers retain the same debt, age, native identity and content for retry.",
+        "A failed transfer does not advance the guest-write witness.",
+        "Named synchronization reports the first unfinished resource. Successful earlier transfers are not repeated.",
+        "Both synchronization opcodes retain their parked position on failure; no completion stamp or discard occurs until successful transfer submission.",
+        "The existing GPU completion owner orders submitted writes before visible completion; submission alone is not completion.",
+        "Texture gathering, compute staging, blits, mapped guest reads and writes, and scanout refuse access through failed required transfers.",
+        "Retired or superseded surface debts release their original resident without writing into replacement backing."
+      ],
+      "regressions": [
+        "Before-fix failure changes the guest-write stamp and loses its debt.",
+        "Native pixels survive a refused transfer and reach the destination on retry; previously paid resources and unrelated resources are untouched.",
+        "All GVA planes retain their debts after failed native readback.",
+        "A parked synchronization packet leaves its completion stamp unchanged across retries, then publishes after pixels transfer successfully.",
+        "Synchronize-and-discard preserves transfer backing during failure and discards after successful submission.",
+        "Unpaid guest reads leave destination bytes unchanged, and refused overwrites preserve guest memory.",
+        "Older gather and writer tests incorrectly treated discarded debt without a native image as successful payment; they now assert refusal and retained debt."
+      ],
+      "checks": {
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 2228 filtered out; finished in 0.18s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "drain": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2251 filtered out; finished in 0.19s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2251 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 20.66s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.94s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.92s",
+            "test result: ok. 68 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 15.81s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "vulkan-mipmap-gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.18s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0,
+          "actual_gpu_execution_confirmed": true
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "vulkan": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 114,
+        "patch_bytes": 1063560,
+        "patch_sha256": "703cab6ce26f8ac995510490b7b29349b44f4a8c775971ed1e60926c5a7934be"
+      },
+      "bazel_rebuilt": false,
+      "desktop_verified": false
+    },
+    "paged_resource_preparation": {
+      "scope": "Resource-owned physical transfer windows and private single-sample 2D color-texture preparation/readback on Vulkan. Compact execution remains unadmitted.",
+      "finding": "A real Vulkan transfer regression read sentinel bytes because the decoder ignored the base mip offset and did not add the dimension base to later mip offsets. The dimension base is 64 bits, not 32.",
+      "contracts": [
+        "Every mip offset is the checked sum of the full-width dimension base and its per-level offset. Overflow refuses decoding.",
+        "A physical transfer window retains ordered guest pages and exact byte bounds. Virtual remapping cannot retarget it; explicit discard permits recapture.",
+        "Transfers validate RAM coverage before copying and preserve row padding.",
+        "Ordinary paged textures upload missing native levels. Ready native content is preserved across retries.",
+        "Generate-mipmap resources upload and synchronize only the base level; native filtering produces the remaining levels.",
+        "Failed reads or writes leave preparation or synchronization unfinished. Submission is not GPU completion."
+      ],
+      "regressions": [
+        "Memory tests cover scattered, repeated and malformed pages, slicing and overflow.",
+        "Both page geometries retain original physical pages across virtual remapping; discard enables recapture and missing replacement pages refuse.",
+        "A later non-RAM page refuses before any bytes are copied.",
+        "Ordinary and generated textures preserve native content, synchronize padded rows and regenerate after guest-write invalidation.",
+        "Real Vulkan test reproduces the decoder offset failure before the fix and passes afterward.",
+        "Real Vulkan test covers nonzero dimension and mip offsets, scatter across pages, both resource families, failed later-mip reads and failed readback rows without retargeting.",
+        "Decoder test preserves offsets above 32 bits and refuses overflow at either mip."
+      ],
+      "checks": {
+        "memory": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "focused": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2255 filtered out; finished in 0.02s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "paging": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2255 filtered out; finished in 0.37s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2256 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 23.84s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.75s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.00s",
+            "test result: ok. 69 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 18.07s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "vulkan-mipmap-gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.14s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "memory-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "memory": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "vulkan": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 118,
+        "patch_bytes": 1110412,
+        "patch_sha256": "fbc99ab704307d7531741aabfc9dfaa834f2136a3545aba9a872db1e3c095040"
+      },
+      "bazel_rebuilt": false,
+      "desktop_verified": false
+    },
+    "shared_buffer_backing": {
+      "scope": "Prepared buffer copying, Vulkan imports, cache reuse, compute writeback and blits. Compact execution remains unadmitted; no current Bazel or live desktop validation.",
+      "finding": "Buffer consumers re-walked virtual addresses after preparation had retained physical backing. The first cache integration also broke a warm cache path; the existing regression caught it and the corrected path passes.",
+      "contracts": [
+        "Prepared buffer consumers retain one bounded physical source through reads, writes and imports; virtual remapping cannot redirect it.",
+        "Explicit discard retires cached imports and permits new preparation; already retained inputs keep their original pages.",
+        "Cache reuse checks retained source identity without requiring a fresh guest descriptor read.",
+        "Buffer copies reject actual physical byte overlap, including aliases with different virtual addresses.",
+        "Rectangular transfers validate the complete logical span before copying rows and preserve padding.",
+        "Physical product writes record host-write witnesses before a potentially partial copy, including native texture readback."
+      ],
+      "regressions": [
+        "Both page geometries, copying and optional imported reads preserve old bytes through remap and discard; recapture serves replacement pages.",
+        "Compute staging and delayed writeback preserve original physical destinations after discard.",
+        "Buffer fills and copies work after unmapping; equal virtual addresses with distinct physical backing can copy, while hidden physical overlap refuses.",
+        "Padded buffer-to-native-texture and native-texture-to-buffer transfers work with the buffer virtual mapping removed.",
+        "Existing warm packed-buffer reuse test failed in the first implementation and passes after preserving the cache lookup contract."
+      ],
+      "checks": {
+        "check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "buffers": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2253 filtered out; finished in 0.11s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "memory": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "paging": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2258 filtered out; finished in 0.17s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "memory-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2259 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 20.46s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.92s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.95s",
+            "test result: ok. 69 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 16.61s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "vulkan-mipmap-gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.18s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "memory": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "vulkan": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 120,
+        "patch_bytes": 1163954,
+        "patch_sha256": "5798f84d29995189d770e9f4d9b11e31d6e52cdd70a06f4a8b64d0c89896fa4e"
+      },
+      "bazel_rebuilt": false,
+      "desktop_verified": false,
+      "metal_runtime_validated": false
+    },
+    "compact_gpu_execution": {
+      "scope": "Compact Execute 0x43 admission and retained preparation/execution/synchronization on Linux/Vulkan. Shared buffers, private single-sample 2D color textures (ordinary or generated mipmaps), and mapper textures are supported resource families; other families refuse before admission. Bazel assembly, source reproduction and artifact privacy verified; live desktop verification is pending.",
+      "contracts": [
+        "All command streams and resource identities are retained before admission; compact and legacy retained inputs cannot be interchanged or supplied together.",
+        "Whole-resource dependencies order preparation even when a resource is not referenced by a command.",
+        "Flag bit 0 consumes guest-write declarations across the complete list before preparation; bit 1 applies after every resource prepares; bit 2 requests post-execution synchronization.",
+        "Shared buffers retain physical pages; ordinary paged textures upload missing levels and generated textures generate native mipmaps; mapper construction registers its retained mapping.",
+        "Shared buffers and mapper textures remain guest-valid; prepared paged consumers use the native content owner rather than a guest-valid cache.",
+        "Failed preparation retains its phase and index; completed guest-write declarations do not replay.",
+        "Commands execute once; failed synchronization retains its unfinished resource index and skips the completed prefix on retry.",
+        "Resources stay retained through Vulkan fences; completion uses the existing GPU-ordered publication owner.",
+        "Nested transfer refusals preserve their canonical diagnostic owner instead of registering duplicate identifiers."
+      ],
+      "regressions": [
+        "Both page geometries: forced preparation and synchronization failures withhold completion stamps; retained inputs survive modified command bytes and remapped/unmapped buffer pages.",
+        "A native image made ready between preparation attempts is not invalidated by replaying an earlier guest-write declaration.",
+        "A buffer fill executes once, completed texture synchronization does not repeat, and the final texture readback precedes completion publication.",
+        "A bad later command stream and an unsupported resource family cause no preparation, command write or acknowledgement.",
+        "Admission refuses missing, mismatched or duplicate legacy/compact retained inputs.",
+        "Full device testing exposed a diagnostic-owner collision, now fixed in both compact and paged wrappers."
+      ],
+      "checks": {
+        "check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "compact": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2260 filtered out; finished in 0.11s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "core": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 649 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.45s",
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s",
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.41s",
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "protocol": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 400 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.02s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "device": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 2264 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 10.72s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "core-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "protocol-clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.47s",
+            "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s",
+            "test result: ok. 69 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 8.44s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "clippy": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "format-check": {
+          "returncode": 0,
+          "summaries": [],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        },
+        "vulkan-mipmap-gpu": {
+          "returncode": 0,
+          "summaries": [
+            "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.12s"
+          ],
+          "validation_errors": 0,
+          "vuid_markers": 0
+        }
+      },
+      "rustdoc_control": {
+        "memory": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "vulkan": {
+          "returncode": 0,
+          "baseline_diagnostics": 0,
+          "candidate_diagnostics": 0,
+          "new_diagnostic_headlines": []
+        },
+        "core": {
+          "returncode": 101,
+          "baseline_diagnostics": 2,
+          "candidate_diagnostics": 2,
+          "new_diagnostic_headlines": []
+        },
+        "device": {
+          "returncode": 101,
+          "baseline_diagnostics": 356,
+          "candidate_diagnostics": 356,
+          "new_diagnostic_headlines": []
+        }
+      },
+      "source_reproduction": {
+        "exact_match": true,
+        "changed_paths": 122,
+        "patch_bytes": 1203447,
+        "patch_sha256": "6a4016c224380c96714fbcdfc8629c96cad766e43609fb70475b0b6cee2e8c17"
+      },
+      "bazel_rebuilt": true,
+      "desktop_verified": false,
+      "bazel_build": {
+        "returncode": 0,
+        "changed_paths": 122,
+        "compared_paths": 122,
+        "candidate_matches_fetched_source": true,
+        "artifact_privacy": "passed",
+        "licenses": "refreshed",
+        "lifecycle_patch_sha256": "6a4016c224380c96714fbcdfc8629c96cad766e43609fb70475b0b6cee2e8c17",
+        "desktop_verified": false
+      },
+      "live_boot_status": "Black display: mapper resource preparation refused width 2147483648 from a 64-byte descriptor. Evidence preserved and owned VM stopped; private decoder draft remains unverified."
+    }
+  },
+  "public_source_archives": {
+    "scope": "Independent public download and hash verification, outside the Bazel cache",
+    "archives": [
+      {
+        "repository": "keycodemapdb",
+        "downloaded": true,
+        "sha256_matches": true
+      },
+      {
+        "repository": "qemu",
+        "downloaded": true,
+        "sha256_matches": true
+      },
+      {
+        "repository": "remis_vgpu",
+        "downloaded": true,
+        "sha256_matches": true
+      },
+      {
+        "repository": "metal2vulkan",
+        "downloaded": true,
+        "sha256_matches": true
+      }
+    ]
+  },
+  "repository_checkpoint": {
+    "purpose": "Local handoff commit of incomplete work, explicitly requested by the user",
+    "desktop_acceptance": false,
+    "publication": "Prior code checkpoint explicitly authorized and published as Gerrit review 1679 through refs/for/master. This documentation update remains local.",
+    "handoff": "HANDOFF.md",
+    "resumed_work": "Desktop goal remains paused. Branch comparison and publication details recorded; the private mapper decoder draft remains unverified.",
+    "pending_private_decoder_draft": {
+      "included_in_patch": false,
+      "validated": false,
+      "latest_attempt": "Compile failed on a narrow pixel-format field access; subsequent edits corrected that call and added metadata/framing changes but have not been recompiled.",
+      "handoff": "HANDOFF.md"
+    },
+    "gerrit_review": {
+      "number": 1679,
+      "url": "https://review.wasmapp.com:9096/c/qemu_remis_vgpu/+/1679",
+      "status_at_verification": "NEW",
+      "target": "refs/for/master",
+      "review_commit": "0b9e21b3b604a8b8e9b14cf21f56c1edbbad6897",
+      "local_checkpoint": "7bb8f1de003c5644611673b24f2e119448ecf661",
+      "local_review_branch": "refs/heads/review/compact-execution-7bb8f1de",
+      "direct_branch_push": false,
+      "includes_current_documentation_update": false
+    },
+    "closeout_revalidation": {
+      "scope": "Documentation-only closeout; prior test and build results retain their original scope",
+      "built_source_paths_checked": 122,
+      "built_source_matches_preserved_checkpoint": true,
+      "lifecycle_patch_sha256": "6a4016c224380c96714fbcdfc8629c96cad766e43609fb70475b0b6cee2e8c17",
+      "private_decoder_draft_files": 2,
+      "private_decoder_draft_validated": false,
+      "owned_vm_stopped": true,
+      "owned_monitor_stopped": true,
+      "new_build": false,
+      "new_tests": false,
+      "new_guest_boot": false,
+      "new_push": false,
+      "private_handoff_refreshed": true
+    }
+  },
+  "reference_branch_comparison": {
+    "scope": "Read-only comparison of remote-verified main/master against the built 122-path local checkpoint; paused decoder draft excluded.",
+    "branches": {
+      "main": "90705cd",
+      "master": "56a1f3d",
+      "remote_heads_verified": true
+    },
+    "local_checkpoint": "7bb8f1de003c",
+    "core_boot_patches": "All 135 target/arm, 40 accel/tcg and 35 system files match both references. vmapple.c differs in graphics transport selection, not Golden Gate boot logic.",
+    "master_qrm_fixes": "Present: dynamic texel widths/whole-run bounds, snapshot format-width checks, scalar descriptor completeness, native readback/layout-checked stores, quiet stale probes and typed non-view handling.",
+    "exact_guard_matches": {
+      "validate_sampled_snapshot_format": true,
+      "first_unwritten_descriptor": true
+    },
+    "translator": "Both reference translator trees match each other. Local runtime changes add aggregate sampler sidecar preservation; no missing reference runtime translator change identified.",
+    "confirmed_regression": "USB HID logical/usage maximum is 101 locally versus 255 in both reference branches. Extended keys may be lost; this does not explain the black boot.",
+    "platform_gap": "Reference Windows shim packs scattered RAM aliases and advertises stable mappings; local Linux MMIO shim supports direct contiguous mappings and rejects fragmented aliases. Buffer copying/caching can differ. Vulkan RAMBlock imports are a separate path; no blanket claim that all GPU imports are disabled.",
+    "protocol_gap": "Both references cap protocol at 62 and retain the same narrow mapper decoder as the built local checkpoint. Local negotiation selects 237, exposing Descriptor2/compact paths. The black boot reports impossible mapper width; an authored wide 1920x1080 descriptor reproduces it. The subsequent private decoder draft is unverified.",
+    "launch_difference": "Reference active launcher uses one ARM vCPU and shared RAM; local defaults use four vCPUs and normal RAM. Both use 8 GiB, cpu=max, TCG, the same verbose boot arguments and writeback disk caching. No timing benchmark performed.",
+    "intentional_exclusions": "Windows-only hash-locked Lavapipe DLL patch, proprietary AIR fixtures and account-specific auto-login helpers are absent from the public Linux project.",
+    "reference_acceptance": "Both reference handoffs describe Finder/Dock acceptance as incomplete; neither is a verified full-desktop baseline.",
+    "next_priority": "Complete/verify the Descriptor2 mapper decoder, then use a matched one-vCPU control to separate protocol failures from CPU/copy throughput. Restore the keyboard range separately.",
+    "source_evidence": {
+      "target/arm/": {
+        "identical_files": 135,
+        "different": [],
+        "missing": []
+      },
+      "accel/tcg/": {
+        "identical_files": 40,
+        "different": [],
+        "missing": []
+      },
+      "system/": {
+        "identical_files": 35,
+        "different": [],
+        "missing": []
+      },
+      "keycodemapdb": {
+        "separate_dependency_matched_files": 17,
+        "metadata_or_different": [
+          ".gitattributes",
+          ".meson-subproject-wrap-hash.txt",
+          "tests/.gitignore"
+        ]
+      },
+      "reference_main": "90705cd7561c177846afbfb8954702bebba14242",
+      "reference_master": "56a1f3d15ec183fe473c94dcbc6414c5463acd5f",
+      "local_checkpoint": "7bb8f1de003c5644611673b24f2e119448ecf661"
+    },
+    "product_code_changed_during_comparison": false,
+    "new_boot_or_benchmark": false
+  }
+}

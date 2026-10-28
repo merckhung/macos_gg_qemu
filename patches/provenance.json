@@ -1,0 +1,17 @@
+[
+  {
+    "file": "qemu-goldengate.patch",
+    "upstream_repository": "https://github.com/steelbrain/qemu-reims-vgpu",
+    "base_revision": "4895365e5bf9d344e494a39eceacb475079fedb5",
+    "repository_sha256": "0afc4cb9f7218bdd02e11049bb4bbc4b4abaa6a1a003684c449e7ca8bdcb867f",
+    "purpose": "Enable vmapple + apple-gfx (libreims_vgpu) under aarch64 TCG on Linux x86-64, add XNU arm64 pointer-authentication and PSCI TCG support, and order virtio-sound-pci capabilities with JACK_INFO/CHMAP_INFO so macOS 27 AppleVirtIOSound registers Apple Virtual Sound Device"
+  },
+  {
+    "file": "reims-vgpu-goldengate.patch",
+    "upstream_repository": "https://github.com/steelbrain/reims-vgpu",
+    "base_revision": "12adb1fb46953ae55d4a7b2d66d9110bb19b0b1a",
+    "metal2vulkan_revision": "f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8",
+    "repository_sha256": "4c82a41ddd3139ce06350aa32e462dc67ec290ca3b92f02b8892d26e2189ba65",
+    "purpose": "Support compile-time RVG_GUEST_PAGE_SHIFT=14 for 16 KiB arm64 guest pages on 4 KiB x86-64 hosts (including IOSurface page mappers), add Ctrl+Alt+F fullscreen toggle to the Linux SDL3 window, approximate runtime MTLSamplerMinMagFilterCubic with Linear and promote sampleCount = 2 to 4 (preserving guest-visible sample_count and translating 2x<->4x buffer-texture blit copies) on 4x-only Vulkan drivers (Mesa Lavapipe) outside REIMS_VGPU_STRICT=1 so apps such as Weather.app and Chess.app render cleanly, and record git source URLs in Cargo.lock for --locked builds"
+  }
+]

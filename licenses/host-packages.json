@@ -1,0 +1,298 @@
+[
+  {
+    "package": "libasound2t64",
+    "notice": "host/libasound2t64.copyright"
+  },
+  {
+    "package": "libasyncns0",
+    "notice": "host/libasyncns0.copyright"
+  },
+  {
+    "package": "libatomic1",
+    "notice": "host/libatomic1.copyright"
+  },
+  {
+    "package": "libaudit1",
+    "notice": "host/libaudit1.copyright"
+  },
+  {
+    "package": "libblkid1",
+    "notice": "host/libblkid1.copyright"
+  },
+  {
+    "package": "libbrlapi0.8",
+    "notice": "host/libbrlapi0.8.copyright"
+  },
+  {
+    "package": "libbsd0",
+    "notice": "host/libbsd0.copyright"
+  },
+  {
+    "package": "libbz2-1.0",
+    "notice": "host/libbz2-1.0.copyright"
+  },
+  {
+    "package": "libc6",
+    "notice": "host/libc6.copyright"
+  },
+  {
+    "package": "libcap-ng0",
+    "notice": "host/libcap-ng0.copyright"
+  },
+  {
+    "package": "libdbus-1-3",
+    "notice": "host/libdbus-1-3.copyright"
+  },
+  {
+    "package": "libdisplay-info3",
+    "notice": "host/libdisplay-info3.copyright"
+  },
+  {
+    "package": "libdrm2",
+    "notice": "host/libdrm2.copyright"
+  },
+  {
+    "package": "libedit2",
+    "notice": "host/libedit2.copyright"
+  },
+  {
+    "package": "libexpat1",
+    "notice": "host/libexpat1.copyright"
+  },
+  {
+    "package": "libfdt1",
+    "notice": "host/libfdt1.copyright"
+  },
+  {
+    "package": "libffi8",
+    "notice": "host/libffi8.copyright"
+  },
+  {
+    "package": "libflac14",
+    "notice": "host/libflac14.copyright"
+  },
+  {
+    "package": "libgcc-s1",
+    "notice": "host/libgcc-s1.copyright"
+  },
+  {
+    "package": "libglib2.0-0t64",
+    "notice": "host/libglib2.0-0t64.copyright"
+  },
+  {
+    "package": "libgmp10",
+    "notice": "host/libgmp10.copyright"
+  },
+  {
+    "package": "libgnutls30t64",
+    "notice": "host/libgnutls30t64.copyright"
+  },
+  {
+    "package": "libhogweed6t64",
+    "notice": "host/libhogweed6t64.copyright"
+  },
+  {
+    "package": "libidn2-0",
+    "notice": "host/libidn2-0.copyright"
+  },
+  {
+    "package": "libjpeg62-turbo",
+    "notice": "host/libjpeg62-turbo.copyright"
+  },
+  {
+    "package": "libllvm21",
+    "notice": "host/libllvm21.copyright"
+  },
+  {
+    "package": "libmd0",
+    "notice": "host/libmd0.copyright"
+  },
+  {
+    "package": "libmount1",
+    "notice": "host/libmount1.copyright"
+  },
+  {
+    "package": "libmp3lame0",
+    "notice": "host/libmp3lame0.copyright"
+  },
+  {
+    "package": "libmpg123-0t64",
+    "notice": "host/libmpg123-0t64.copyright"
+  },
+  {
+    "package": "libncursesw6",
+    "notice": "host/libncursesw6.copyright"
+  },
+  {
+    "package": "libnettle8t64",
+    "notice": "host/libnettle8t64.copyright"
+  },
+  {
+    "package": "libogg0",
+    "notice": "host/libogg0.copyright"
+  },
+  {
+    "package": "libopus0",
+    "notice": "host/libopus0.copyright"
+  },
+  {
+    "package": "libp11-kit0",
+    "notice": "host/libp11-kit0.copyright"
+  },
+  {
+    "package": "libpam0g",
+    "notice": "host/libpam0g.copyright"
+  },
+  {
+    "package": "libpcre2-8-0",
+    "notice": "host/libpcre2-8-0.copyright"
+  },
+  {
+    "package": "libpixman-1-0",
+    "notice": "host/libpixman-1-0.copyright"
+  },
+  {
+    "package": "libpng16-16t64",
+    "notice": "host/libpng16-16t64.copyright"
+  },
+  {
+    "package": "libpulse0",
+    "notice": "host/libpulse0.copyright"
+  },
+  {
+    "package": "libsasl2-2",
+    "notice": "host/libsasl2-2.copyright"
+  },
+  {
+    "package": "libseccomp2",
+    "notice": "host/libseccomp2.copyright"
+  },
+  {
+    "package": "libselinux1",
+    "notice": "host/libselinux1.copyright"
+  },
+  {
+    "package": "libslirp0",
+    "notice": "host/libslirp0.copyright"
+  },
+  {
+    "package": "libsndfile1",
+    "notice": "host/libsndfile1.copyright"
+  },
+  {
+    "package": "libssl3t64",
+    "notice": "host/libssl3t64.copyright"
+  },
+  {
+    "package": "libstdc++6",
+    "notice": "host/libstdc++6.copyright"
+  },
+  {
+    "package": "libsystemd0",
+    "notice": "host/libsystemd0.copyright"
+  },
+  {
+    "package": "libtasn1-6",
+    "notice": "host/libtasn1-6.copyright"
+  },
+  {
+    "package": "libtinfo6",
+    "notice": "host/libtinfo6.copyright"
+  },
+  {
+    "package": "libudev1",
+    "notice": "host/libudev1.copyright"
+  },
+  {
+    "package": "libunistring5",
+    "notice": "host/libunistring5.copyright"
+  },
+  {
+    "package": "libvorbis0a",
+    "notice": "host/libvorbis0a.copyright"
+  },
+  {
+    "package": "libvorbisenc2",
+    "notice": "host/libvorbisenc2.copyright"
+  },
+  {
+    "package": "libvulkan1",
+    "notice": "host/libvulkan1.copyright"
+  },
+  {
+    "package": "libwayland-client0",
+    "notice": "host/libwayland-client0.copyright"
+  },
+  {
+    "package": "libx11-6",
+    "notice": "host/libx11-6.copyright"
+  },
+  {
+    "package": "libx11-xcb1",
+    "notice": "host/libx11-xcb1.copyright"
+  },
+  {
+    "package": "libxau6",
+    "notice": "host/libxau6.copyright"
+  },
+  {
+    "package": "libxcb-dri3-0",
+    "notice": "host/libxcb-dri3-0.copyright"
+  },
+  {
+    "package": "libxcb-present0",
+    "notice": "host/libxcb-present0.copyright"
+  },
+  {
+    "package": "libxcb-randr0",
+    "notice": "host/libxcb-randr0.copyright"
+  },
+  {
+    "package": "libxcb-shm0",
+    "notice": "host/libxcb-shm0.copyright"
+  },
+  {
+    "package": "libxcb-sync1",
+    "notice": "host/libxcb-sync1.copyright"
+  },
+  {
+    "package": "libxcb-xfixes0",
+    "notice": "host/libxcb-xfixes0.copyright"
+  },
+  {
+    "package": "libxcb1",
+    "notice": "host/libxcb1.copyright"
+  },
+  {
+    "package": "libxdmcp6",
+    "notice": "host/libxdmcp6.copyright"
+  },
+  {
+    "package": "libxml2-16",
+    "notice": "host/libxml2-16.copyright"
+  },
+  {
+    "package": "libxshmfence1",
+    "notice": "host/libxshmfence1.copyright"
+  },
+  {
+    "package": "libz3-4",
+    "notice": "host/libz3-4.copyright"
+  },
+  {
+    "package": "libzstd1",
+    "notice": "host/libzstd1.copyright"
+  },
+  {
+    "package": "llvm-21",
+    "notice": "host/llvm-21.copyright"
+  },
+  {
+    "package": "mesa-vulkan-drivers",
+    "notice": "host/mesa-vulkan-drivers.copyright"
+  },
+  {
+    "package": "zlib1g",
+    "notice": "host/zlib1g.copyright"
+  }
+]

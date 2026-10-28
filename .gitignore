@@ -1,0 +1,18 @@
+/bazel-*
+__pycache__/
+*.pyc
+.DS_Store
+# Private VM assets and runtime output belong in a sibling directory.
+*.img
+*.qcow2
+*.ipsw
+*.dmg
+*.raw
+*.bin
+*.air
+*.metallib
+*.spv
+*.log
+*.ppm
+core
+core.*

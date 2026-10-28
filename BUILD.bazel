@@ -1,0 +1,23 @@
+load("//build_defs:build.bzl", "boot_vm", "qemu_build", "remis_build")
+
+remis_build(
+    name = "remis_vgpu",
+    srcs = ["@remis_vgpu//:sources"],
+    manifest = "@remis_vgpu//:Cargo.toml",
+)
+
+qemu_build(
+    name = "qemu",
+    srcs = [
+        "@keycodemapdb//:sources",
+        "@qemu//:sources",
+    ],
+    configure = "@qemu//:configure",
+    keymap_manifest = "@keycodemapdb//:meson.build",
+    remis = ":remis_vgpu",
+)
+
+boot_vm(
+    name = "boot",
+    qemu = ":qemu",
+)

@@ -1,0 +1,1484 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: libjpeg-turbo
+Source: https://github.com/libjpeg-turbo/libjpeg-turbo
+
+Files: BUILDING.md
+ CMakeLists.txt
+ ChangeLog.md
+ README.ijg
+ README.md
+ cmakescripts/BuildPackages.cmake
+ cmakescripts/GenerateWrappers.cmake
+ cmakescripts/PackageInfo.cmake
+ cmakescripts/cmake_uninstall.cmake.in
+ cmakescripts/testclean.cmake
+ cmakescripts/tjbenchtest.cmake
+ cmakescripts/tjexampletest.cmake
+ doc/change.log
+ doc/cjpeg.1
+ doc/djpeg.1
+ doc/doxygen-extra.css
+ doc/doxygen.config
+ doc/jpegtran.1
+ doc/rdjpgcom.1
+ doc/turbojpeg/annotated.html
+ doc/turbojpeg/bc_s.png
+ doc/turbojpeg/bc_sd.png
+ doc/turbojpeg/classes.html
+ doc/turbojpeg/closed.png
+ doc/turbojpeg/doc.svg
+ doc/turbojpeg/docd.svg
+ doc/turbojpeg/doxygen-extra.css
+ doc/turbojpeg/doxygen.css
+ doc/turbojpeg/doxygen.svg
+ doc/turbojpeg/folderclosed.svg
+ doc/turbojpeg/folderclosedd.svg
+ doc/turbojpeg/folderopen.svg
+ doc/turbojpeg/folderopend.svg
+ doc/turbojpeg/functions.html
+ doc/turbojpeg/functions_vars.html
+ doc/turbojpeg/group___turbo_j_p_e_g.html
+ doc/turbojpeg/index.html
+ doc/turbojpeg/minus.svg
+ doc/turbojpeg/minusd.svg
+ doc/turbojpeg/nav_f.png
+ doc/turbojpeg/nav_fd.png
+ doc/turbojpeg/nav_g.png
+ doc/turbojpeg/nav_h.png
+ doc/turbojpeg/nav_hd.png
+ doc/turbojpeg/open.png
+ doc/turbojpeg/plus.svg
+ doc/turbojpeg/plusd.svg
+ doc/turbojpeg/search/all_0.js
+ doc/turbojpeg/search/all_1.js
+ doc/turbojpeg/search/all_2.js
+ doc/turbojpeg/search/all_3.js
+ doc/turbojpeg/search/all_4.js
+ doc/turbojpeg/search/all_5.js
+ doc/turbojpeg/search/all_6.js
+ doc/turbojpeg/search/all_7.js
+ doc/turbojpeg/search/all_8.js
+ doc/turbojpeg/search/all_9.js
+ doc/turbojpeg/search/all_a.js
+ doc/turbojpeg/search/all_b.js
+ doc/turbojpeg/search/classes_0.js
+ doc/turbojpeg/search/close.svg
+ doc/turbojpeg/search/enums_0.js
+ doc/turbojpeg/search/enumvalues_0.js
+ doc/turbojpeg/search/functions_0.js
+ doc/turbojpeg/search/groups_0.js
+ doc/turbojpeg/search/mag.svg
+ doc/turbojpeg/search/mag_d.svg
+ doc/turbojpeg/search/mag_sel.svg
+ doc/turbojpeg/search/mag_seld.svg
+ doc/turbojpeg/search/search.css
+ doc/turbojpeg/search/searchdata.js
+ doc/turbojpeg/search/typedefs_0.js
+ doc/turbojpeg/search/variables_0.js
+ doc/turbojpeg/search/variables_1.js
+ doc/turbojpeg/search/variables_2.js
+ doc/turbojpeg/search/variables_3.js
+ doc/turbojpeg/search/variables_4.js
+ doc/turbojpeg/search/variables_5.js
+ doc/turbojpeg/search/variables_6.js
+ doc/turbojpeg/search/variables_7.js
+ doc/turbojpeg/search/variables_8.js
+ doc/turbojpeg/search/variables_9.js
+ doc/turbojpeg/structtjregion.html
+ doc/turbojpeg/structtjscalingfactor.html
+ doc/turbojpeg/structtjtransform.html
+ doc/turbojpeg/splitbar.png
+ doc/turbojpeg/splitbard.png
+ doc/turbojpeg/sync_off.png
+ doc/turbojpeg/sync_on.png
+ doc/turbojpeg/tab_a.png
+ doc/turbojpeg/tab_ad.png
+ doc/turbojpeg/tab_b.png
+ doc/turbojpeg/tab_bd.png
+ doc/turbojpeg/tab_h.png
+ doc/turbojpeg/tab_hd.png
+ doc/turbojpeg/tab_s.png
+ doc/turbojpeg/tab_sd.png
+ doc/turbojpeg/tabs.css
+ doc/turbojpeg/topics.html
+ doc/wizard.txt
+ doc/wrjpgcom.1
+ fuzz/CMakeLists.txt
+ fuzz/build.sh
+ java/CMakeLists.txt
+ java/MANIFEST.MF
+ java/README
+ java/doc/allclasses-index.html
+ java/doc/allclasses.html
+ java/doc/allpackages-index.html
+ java/doc/constant-values.html
+ java/doc/deprecated-list.html
+ java/doc/element-list
+ java/doc/help-doc.html
+ java/doc/index-all.html
+ java/doc/index.html
+ java/doc/legal/ADDITIONAL_LICENSE_INFO
+ java/doc/legal/ASSEMBLY_EXCEPTION
+ java/doc/legal/jquery.md
+ java/doc/legal/jqueryUI.md
+ java/doc/legal/jszip.md
+ java/doc/member-search-index.zip
+ java/doc/member-search-index.js
+ java/doc/org/libjpegturbo/turbojpeg/TJ.html
+ java/doc/org/libjpegturbo/turbojpeg/TJCompressor.html
+ java/doc/org/libjpegturbo/turbojpeg/TJCustomFilter.html
+ java/doc/org/libjpegturbo/turbojpeg/TJDecompressor.html
+ java/doc/org/libjpegturbo/turbojpeg/TJException.html
+ java/doc/org/libjpegturbo/turbojpeg/TJScalingFactor.html
+ java/doc/org/libjpegturbo/turbojpeg/TJTransform.html
+ java/doc/org/libjpegturbo/turbojpeg/TJTransformer.html
+ java/doc/org/libjpegturbo/turbojpeg/YUVImage.html
+ java/doc/org/libjpegturbo/turbojpeg/package-summary.html
+ java/doc/org/libjpegturbo/turbojpeg/package-tree.html
+ java/doc/overview-tree.html
+ java/doc/package-search-index.zip
+ java/doc/package-search-index.js
+ java/doc/serialized-form.html
+ java/doc/stylesheet.css
+ java/doc/resources/glass.png
+ java/doc/resources/x.png
+ java/doc/type-search-index.zip
+ java/doc/type-search-index.js
+ java/org_libjpegturbo_turbojpeg_TJ.h
+ java/org_libjpegturbo_turbojpeg_TJCompressor.h
+ java/org_libjpegturbo_turbojpeg_TJDecompressor.h
+ java/org_libjpegturbo_turbojpeg_TJTransformer.h
+ release/Config.cmake.in
+ release/Distribution.xml.in
+ release/License.rtf
+ release/ReadMe.txt
+ release/Welcome.rtf.in
+ release/deb-control.in
+ release/installer.nsi.in
+ release/libjpeg.pc.in
+ release/libturbojpeg.pc.in
+ release/makedpkg.in
+ release/makemacpkg.in
+ release/makerpm.in
+ release/makesrpm.in
+ release/maketarball.in
+ release/rpm.spec.in
+ sharedlib/CMakeLists.txt
+ simd/CMakeLists.txt
+ simd/nasm/jsimdcfg.inc
+ simd/nasm/jsimdcfg.inc.h
+ src/jconfig.h.in
+ src/jconfigint.h.in
+ src/libjpeg.map.in
+ src/md5/CMakeLists.txt
+ src/turbojpeg-mapfile
+ src/turbojpeg-mapfile.jni
+ test/croptest.in
+ test/tjbenchtest.in
+ test/tjcomptest.in
+ test/tjdecomptest.in
+ test/tjtrantest.in
+ testimages/monkey16.pgm
+ testimages/monkey16.ppm
+ testimages/shira_bird8.bmp
+ testimages/test.scan
+ testimages/test1.icc
+ testimages/test3.icc
+ testimages/testimgari.jpg
+ testimages/testimgint.jpg
+ testimages/testorig.jpg
+ testimages/testorig.pgm
+ testimages/testorig.ppm
+ testimages/testorig12.jpg
+ testimages/vgl_5674_0098.bmp
+ testimages/vgl_6434_0018a.bmp
+ testimages/vgl_6548_0026a.bmp
+ win/gcc/projectTargets-release.cmake.in
+ win/jpeg.rc.in
+ win/jpeg62.def
+ win/jpeg7.def
+ win/jpeg8.def
+ win/projectTargets.cmake.in
+ win/turbojpeg.rc.in
+ win/vc/projectTargets-release.cmake.in
+Copyright: 1991-2020, Thomas G. Lane, Guido Vollbeding
+           1999-2006, MIYASAKA Masaru
+           2009-2025, D. R. Commander
+           2009-2011, Nokia Corporation and/or its subsidiary(-ies)
+           2009, 2012, Pierre Ossman for Cendio AB
+           2011-2016, Siarhei Siamashka
+           2013-2014, Linaro Limited
+           2013-2014, MIPS Technologies, Inc.
+           2015-2016, 2018 Matthieu Darbois
+           2015, 2020, Google, Inc.
+           2015, Intel Corporation
+           2019-2020, Arm Limited
+License: BSD-BY-LC-NE
+Comment:
+ Assuming main license, no license specified.
+
+Files: src/cmyk.h
+ src/jaricom.c
+ src/jcarith.c
+ src/jdarith.c
+ src/jpeg_nbits.c
+ src/jpegapicomp.h
+ src/jsamplecomp.h
+ src/wrapper/jcapistd-12.c
+ src/wrapper/jcapistd-16.c
+ src/wrapper/jcapistd-8.c
+ src/wrapper/jccoefct-12.c
+ src/wrapper/jccoefct-8.c
+ src/wrapper/jccolor-12.c
+ src/wrapper/jccolor-16.c
+ src/wrapper/jccolor-8.c
+ src/wrapper/jcdctmgr-12.c
+ src/wrapper/jcdctmgr-8.c
+ src/wrapper/jcdiffct-12.c
+ src/wrapper/jcdiffct-16.c
+ src/wrapper/jcdiffct-8.c
+ src/wrapper/jclossls-12.c
+ src/wrapper/jclossls-16.c
+ src/wrapper/jclossls-8.c
+ src/wrapper/jcmainct-12.c
+ src/wrapper/jcmainct-16.c
+ src/wrapper/jcmainct-8.c
+ src/wrapper/jcprepct-12.c
+ src/wrapper/jcprepct-16.c
+ src/wrapper/jcprepct-8.c
+ src/wrapper/jcsample-12.c
+ src/wrapper/jcsample-16.c
+ src/wrapper/jcsample-8.c
+ src/wrapper/jdapistd-12.c
+ src/wrapper/jdapistd-16.c
+ src/wrapper/jdapistd-8.c
+ src/wrapper/jdcoefct-12.c
+ src/wrapper/jdcoefct-8.c
+ src/wrapper/jdcolor-12.c
+ src/wrapper/jdcolor-16.c
+ src/wrapper/jdcolor-8.c
+ src/wrapper/jddctmgr-12.c
+ src/wrapper/jddctmgr-8.c
+ src/wrapper/jddiffct-12.c
+ src/wrapper/jddiffct-16.c
+ src/wrapper/jddiffct-8.c
+ src/wrapper/jdlossls-12.c
+ src/wrapper/jdlossls-16.c
+ src/wrapper/jdlossls-8.c
+ src/wrapper/jdmainct-12.c
+ src/wrapper/jdmainct-16.c
+ src/wrapper/jdmainct-8.c
+ src/wrapper/jdmerge-12.c
+ src/wrapper/jdmerge-8.c
+ src/wrapper/jdpostct-12.c
+ src/wrapper/jdpostct-16.c
+ src/wrapper/jdpostct-8.c
+ src/wrapper/jdsample-12.c
+ src/wrapper/jdsample-16.c
+ src/wrapper/jdsample-8.c
+ src/wrapper/jfdctfst-12.c
+ src/wrapper/jfdctfst-8.c
+ src/wrapper/jfdctint-12.c
+ src/wrapper/jfdctint-8.c
+ src/wrapper/jidctflt-12.c
+ src/wrapper/jidctflt-8.c
+ src/wrapper/jidctfst-12.c
+ src/wrapper/jidctfst-8.c
+ src/wrapper/jidctint-12.c
+ src/wrapper/jidctint-8.c
+ src/wrapper/jidctred-12.c
+ src/wrapper/jidctred-8.c
+ src/wrapper/jquant1-12.c
+ src/wrapper/jquant1-8.c
+ src/wrapper/jquant2-12.c
+ src/wrapper/jquant2-8.c
+ src/wrapper/jutils-12.c
+ src/wrapper/jutils-16.c
+ src/wrapper/jutils-8.c
+ src/wrapper/rdcolmap-12.c
+ src/wrapper/rdcolmap-8.c
+ src/wrapper/rdppm-12.c
+ src/wrapper/rdppm-16.c
+ src/wrapper/rdppm-8.c
+ src/wrapper/template.c
+ src/wrapper/wrgif-12.c
+ src/wrapper/wrgif-8.c
+ src/wrapper/wrppm-12.c
+ src/wrapper/wrppm-16.c
+ src/wrapper/wrppm-8.c
+Copyright: 2009-2019, 2021, D. R. Commander
+  2010, 2020, D. R. Commander
+  2015, 2018, 2021-2022, D. R. Commander
+  2015, 2018, D. R. Commander
+  2015-2020, 2022, D. R. Commander
+  2017-2018, 2022, 2024-2025, D. R. Commander
+  2022, D. R. Commander
+  2024-2025, D. R. Commander
+  2025, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: src/cderror.h
+ src/cdjpeg.c
+ src/cdjpeg.h
+ src/example.c
+ src/jcapimin.c
+ src/jcapistd.c
+ src/jccoefct.c
+ src/jccolext.c
+ src/jchuff.h
+ src/jcmaster.h
+ src/jcomapi.c
+ src/jctrans.c
+ src/jdatadst-tj.c
+ src/jdatadst.c
+ src/jdatasrc-tj.c
+ src/jdatasrc.c
+ src/jdcolext.c
+ src/jdct.h
+ src/jdmainct.c
+ src/jdmainct.h
+ src/jdmerge.h
+ src/jdmrgext.c
+ src/jdpostct.c
+ src/jdsample.h
+ src/jdtrans.c
+ src/jerror.c
+ src/jfdctfst.c
+ src/jfdctint.c
+ src/jidctflt.c
+ src/jidctfst.c
+ src/jidctint.c
+ src/jidctred.c
+ src/jinclude.h
+ src/jmemmgr.c
+ src/jmemnobs.c
+ src/jquant1.c
+ src/jquant2.c
+ src/jstdhuff.c
+ src/jutils.c
+ src/rdbmp.c
+ src/rdjpgcom.c
+ src/rdswitch.c
+ src/rdtarga.c
+ src/wrjpgcom.c
+ src/wrppm.c
+ src/wrtarga.c
+Copyright: 1991-1994, Thomas G. Lane
+  1991-1995, Thomas G. Lane
+  1991-1996, Thomas G. Lane
+  1991-1997, Thomas G. Lane
+  1991-1998, Thomas G. Lane
+  1992-1996, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  1994-1997, Thomas G. Lane
+  1994-1998, Thomas G. Lane
+  1995-1997, Thomas G. Lane
+  1995-1998, Thomas G. Lane
+  2009, 2011, 2015, 2022-2023, D. R. Commander
+  2009, 2014-2015, 2020, 2022-2023, 2025, D. R. Commander
+  2009, 2015, 2022-2023, D. R. Commander
+  2009-2012, 2015, 2022, D. R. Commander
+  2010, 2016, 2022, 2024, D. R. Commander
+  2010, 2018, 2022, D. R. Commander
+  2011, 2014, 2016, 2019, 2022-2023, D. R. Commander
+  2011, 2015, 2020, 2022-2023, D. R. Commander
+  2011, 2016, 2019, 2023, D. R. Commander
+  2013, 2016, 2022, D. R. Commander
+  2013, 2022, 2024, D. R. Commander
+  2014, 2022, D. R. Commander
+  2015, 2017-2018, 2021-2024, D. R. Commander
+  2015, 2020, 2022, D. R. Commander
+  2015, 2022, D. R. Commander
+  2015, D. R. Commander
+  2016, 2021-2022, 2024, D. R. Commander
+  2016, D. R. Commander
+  2017, 2019, 2021-2022, D. R. Commander
+  2017, 2019, 2022, D. R. Commander
+  2017, 2019, 2022-2024, D. R. Commander
+  2017, 2019-2020, 2022, 2024, D. R. Commander
+  2017-2018, 2024, D. R. Commander
+  2018, 2021-2023, D. R. Commander
+  2019, 2022, D. R. Commander
+  2020, 2022, D. R. Commander
+  2021, 2024, D. R. Commander
+  2022, 2024, D. R. Commander
+  2022, D. R. Commander
+  2022-2023, D. R. Commander
+  2022-2024, D. R. Commander
+  2024, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/i386/jccolext-mmx.asm
+ simd/i386/jccolor-mmx.asm
+ simd/i386/jcgray-mmx.asm
+ simd/i386/jcgryext-mmx.asm
+ simd/i386/jcsample-mmx.asm
+ simd/i386/jcsample-sse2.asm
+ simd/i386/jdcolext-mmx.asm
+ simd/i386/jdcolext-sse2.asm
+ simd/i386/jdcolor-mmx.asm
+ simd/i386/jdcolor-sse2.asm
+ simd/i386/jdmerge-mmx.asm
+ simd/i386/jdmerge-sse2.asm
+ simd/i386/jdmrgext-mmx.asm
+ simd/i386/jdmrgext-sse2.asm
+ simd/i386/jdsample-mmx.asm
+ simd/i386/jdsample-sse2.asm
+ simd/i386/jfdctflt-3dn.asm
+ simd/i386/jfdctflt-sse.asm
+ simd/i386/jfdctfst-mmx.asm
+ simd/i386/jfdctfst-sse2.asm
+ simd/i386/jfdctint-avx2.asm
+ simd/i386/jfdctint-mmx.asm
+ simd/i386/jfdctint-sse2.asm
+ simd/i386/jidctflt-3dn.asm
+ simd/i386/jidctflt-sse.asm
+ simd/i386/jidctflt-sse2.asm
+ simd/i386/jidctfst-mmx.asm
+ simd/i386/jidctfst-sse2.asm
+ simd/i386/jidctint-avx2.asm
+ simd/i386/jidctint-mmx.asm
+ simd/i386/jidctint-sse2.asm
+ simd/i386/jidctred-mmx.asm
+ simd/i386/jidctred-sse2.asm
+ simd/i386/jquant-3dn.asm
+ simd/i386/jquant-mmx.asm
+ simd/i386/jquant-sse.asm
+ simd/i386/jquantf-sse2.asm
+ simd/i386/jquanti-sse2.asm
+ simd/i386/jsimdcpu.asm
+ simd/nasm/jdct.inc
+ simd/x86_64/jdcolor-sse2.asm
+ simd/x86_64/jdmerge-sse2.asm
+ simd/x86_64/jfdctint-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2012, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009, 2016, 2018, 2020, 2024-2025, D. R. Commander
+  2009, 2016, 2024, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2011, 2016, 2024-2025, D. R. Commander
+  2012, 2016, 2024-2025, D. R. Commander
+  2016, 2020, 2024-2025, D. R. Commander
+  2016, 2024-2025, D. R. Commander
+  2016, D. R. Commander
+  2018, D. R. Commander
+License: Zlib
+
+Files: fuzz/cjpeg.cc
+ fuzz/compress.cc
+ fuzz/compress12.cc
+ fuzz/compress12_lossless.cc
+ fuzz/compress16_lossless.cc
+ fuzz/compress_lossless.cc
+ fuzz/compress_yuv.cc
+ fuzz/decompress.cc
+ fuzz/decompress_yuv.cc
+ fuzz/transform.cc
+ java/TJBench.java
+ java/TJComp.java
+ java/TJDecomp.java
+ java/TJTran.java
+ java/TJUnitTest.java
+ java/org/libjpegturbo/turbojpeg/TJCustomFilter.java
+ java/org/libjpegturbo/turbojpeg/TJLoader-unix.java.in
+ java/org/libjpegturbo/turbojpeg/TJLoader-win.java.in
+ java/org/libjpegturbo/turbojpeg/TJTransform.java
+ java/turbojpeg-jni.c
+ release/uninstall.in
+ src/jcstest.c
+ src/md5/md5.h
+ src/md5/md5cmp.c
+ src/md5/md5sum.c
+ src/strtest.c
+ src/tjbench.c
+ src/tjcomp.c
+ src/tjdecomp.c
+ src/tjtran.c
+ src/tjunittest.c
+ src/tjutil.c
+ src/tjutil.h
+ src/turbojpeg-mp.c
+ src/turbojpeg.h
+Copyright: 2009-2011, 2013, 2016, 2020, D. R. Commander
+  2009-2014, 2016-2019, 2021-2025, D. R. Commander
+  2009-2014, 2017-2019, 2022-2025, D. R. Commander
+  2009-2015, 2017, 2020-2025, D. R. Commander
+  2009-2019, 2021-2025, D. R. Commander
+  2009-2025, D. R. Commander
+  2011, 2013, 2018, 2022-2024, D. R. Commander
+  2011, 2013, 2023-2024, D. R. Commander
+  2011, 2019, D. R. Commander
+  2011, 2022, D. R. Commander
+  2011, 2025, D. R. Commander
+  2011, D. R. Commander
+  2011-2012, 2014-2015, 2017, 2019, 2021-2024, D. R. Commander
+  2011-2012, 2014-2015, 2017-2018, 2022-2025, D. R. Commander
+  2011-2013, 2016, 2020, D. R. Commander
+  2011-2018, 2022-2025, D. R. Commander
+  2011-2025, D. R. Commander
+  2013, 2016, 2024-2025, D. R. Commander
+  2013, 2016, 2025, D. R. Commander
+  2018, D. R. Commander
+  2021, 2023-2025, D. R. Commander
+  2021, 2024, D. R. Commander
+  2021-2025, D. R. Commander
+  2022-2023, D. R. Commander
+License: BSD-3-clause
+
+Files: src/cjpeg.c
+ src/jcdiffct.c
+ src/jcinit.c
+ src/jclhuff.c
+ src/jclossls.c
+ src/jcmainct.c
+ src/jcmarker.c
+ src/jcmaster.c
+ src/jcparam.c
+ src/jcprepct.c
+ src/jdapimin.c
+ src/jddiffct.c
+ src/jdlhuff.c
+ src/jdlossls.c
+ src/jdmarker.c
+ src/jdphuff.c
+ src/jerror.h
+ src/jlossls.h
+ src/jmorecfg.h
+Copyright: 1991-1997, Thomas G. Lane
+  1991-1998, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  1994-1997, Thomas G. Lane
+  1994-1998, Thomas G. Lane
+  1995-1997, Thomas G. Lane
+  1998, Thomas G. Lane
+  1999, Ken Murchison
+  2009, 2011, 2014-2015, 2018, 2020, 2022, D. R. Commander
+  2009-2011, 2018, 2023-2024, D. R. Commander
+  2010, 2013-2014, 2017, 2019-2022, 2024-2025, D. R. Commander
+  2010, 2016, 2018, 2022-2024, D. R. Commander
+  2010, 2022, D. R. Commander
+  2012, 2015, 2022, 2024, D. R. Commander
+  2014, 2017, 2021-2023, D. R. Commander
+  2015-2016, 2018-2022, D. R. Commander
+  2016, 2022, 2024, D. R. Commander
+  2020, 2022, 2024, D. R. Commander
+  2022, 2024, D. R. Commander
+  2022, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/arm/aarch32/jccolext-neon.c
+ simd/arm/aarch32/jchuff-neon.c
+ simd/arm/aarch64/jchuff-neon.c
+ simd/arm/jccolor-neon.c
+ simd/arm/jcgray-neon.c
+ simd/arm/jcsample-neon.c
+ simd/arm/jdcolext-neon.c
+ simd/arm/jdcolor-neon.c
+ simd/arm/jdmerge-neon.c
+ simd/arm/jdmrgext-neon.c
+ simd/arm/jdsample-neon.c
+ simd/arm/jfdctfst-neon.c
+ simd/arm/jfdctint-neon.c
+ simd/arm/jidctfst-neon.c
+ simd/arm/jidctint-neon.c
+ simd/arm/jidctred-neon.c
+ simd/arm/jquanti-neon.c
+ simd/arm/neon-compat.h.in
+Copyright: 2020, 2022, 2024, D. R. Commander
+  2020, 2024, D. R. Commander
+  2020, 2024-2025, D. R. Commander
+  2020, Arm Limited
+  2020, D. R. Commander
+  2020-2021, Arm Limited
+  2024, D. R. Commander
+  2024-2025, D. R. Commander
+License: Zlib
+
+Files: simd/powerpc/jccolor-altivec.c
+ simd/powerpc/jcgray-altivec.c
+ simd/powerpc/jcsample-altivec.c
+ simd/powerpc/jdcolext-altivec.c
+ simd/powerpc/jdcolor-altivec.c
+ simd/powerpc/jdmerge-altivec.c
+ simd/powerpc/jdmrgext-altivec.c
+ simd/powerpc/jdsample-altivec.c
+ simd/powerpc/jfdctfst-altivec.c
+ simd/powerpc/jfdctint-altivec.c
+ simd/powerpc/jidctfst-altivec.c
+ simd/powerpc/jidctint-altivec.c
+ simd/powerpc/jquanti-altivec.c
+ simd/powerpc/jsimd_altivec.h
+Copyright: 2014, 2020, D. R. Commander
+  2014, D. R. Commander
+  2014-2015, 2020, 2024, D. R. Commander
+  2014-2015, 2024, D. R. Commander
+  2014-2015, 2024-2025, D. R. Commander
+  2015, 2024, D. R. Commander
+  2015, D. R. Commander
+License: Zlib
+
+Files: simd/i386/jcsample-avx2.asm
+ simd/i386/jdcolext-avx2.asm
+ simd/i386/jdcolor-avx2.asm
+ simd/i386/jdmerge-avx2.asm
+ simd/i386/jdmrgext-avx2.asm
+ simd/i386/jdsample-avx2.asm
+ simd/x86_64/jdcolor-avx2.asm
+ simd/x86_64/jdmerge-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2012, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009, 2016, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2012, 2016, 2024, D. R. Commander
+  2015, Intel Corporation
+  2016, 2024-2025, D. R. Commander
+License: BSD-3-clause
+
+Files: java/org/libjpegturbo/turbojpeg/TJ.java
+ java/org/libjpegturbo/turbojpeg/TJCompressor.java
+ java/org/libjpegturbo/turbojpeg/TJDecompressor.java
+ java/org/libjpegturbo/turbojpeg/TJException.java
+ java/org/libjpegturbo/turbojpeg/TJScalingFactor.java
+ java/org/libjpegturbo/turbojpeg/TJTransformer.java
+ java/org/libjpegturbo/turbojpeg/YUVImage.java
+Copyright: 2011, 2013-2015, 2023, D. R. Commander
+  2011, 2018, 2023, D. R. Commander
+  2011-2013, 2017-2018, 2020-2024, D. R. Commander
+  2011-2015, 2018, 2020, 2022-2025, D. R. Commander
+  2011-2015, 2018, 2022-2024, D. R. Commander
+  2014, 2017, 2023-2024, D. R. Commander
+  2015, Viktor Szathmáry
+  2017-2018, D. R. Commander
+License: BSD-3-clause
+
+Files: simd/x86_64/jdcolext-sse2.asm
+ simd/x86_64/jdmrgext-sse2.asm
+ simd/x86_64/jdsample-sse2.asm
+ simd/x86_64/jidctflt-sse2.asm
+ simd/x86_64/jidctfst-sse2.asm
+ simd/x86_64/jidctint-sse2.asm
+ simd/x86_64/jidctred-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2012, 2016, 2024-2025, D. R. Commander
+  2009, 2012, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009, 2016, 2020, 2024-2025, D. R. Commander
+  2009, 2016, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2018, Matthias Räncker
+  2023, Aliaksiej Kandracienka
+License: BSD-3-clause
+
+Files: doc/coderules.txt
+ simd/mips64/jcsample.h
+ simd/powerpc/jcsample.h
+ src/jconfig.txt
+ src/jdmaster.h
+ src/jfdctflt.c
+ src/jmemsys.h
+Copyright: 1991-1994, Thomas G. Lane
+  1991-1995, Thomas G. Lane
+  1991-1996, Thomas G. Lane
+  1992-1997, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+License: BSD-BY-LC-NE
+
+Files: simd/mips64/jcsample-mmi.c
+ simd/mips64/jdsample-mmi.c
+ simd/mips64/jfdctfst-mmi.c
+ simd/mips64/jfdctint-mmi.c
+ simd/mips64/jidctfst-mmi.c
+ simd/mips64/jidctint-mmi.c
+ simd/mips64/jquanti-mmi.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2014, 2018, 2020, D. R. Commander
+  2014, 2018-2019, D. R. Commander
+  2014-2015, 2018, 2020, 2025, D. R. Commander
+  2014-2015, 2018-2019, D. R. Commander
+  2015, 2018-2019, D. R. Commander
+  2015, 2018-2019, 2025, D. R. Commander
+  2016-2017, Loongson Technology Corporation Limited, BeiJing
+  2016-2018, Loongson Technology Corporation Limited, BeiJing
+  2018-2019, 2025, D. R. Commander
+License: Zlib
+
+Files: simd/i386/jccolext-avx2.asm
+ simd/i386/jccolor-avx2.asm
+ simd/i386/jcgray-avx2.asm
+ simd/i386/jcgryext-avx2.asm
+ simd/x86_64/jccolor-avx2.asm
+ simd/x86_64/jcgray-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2024, D. R. Commander
+  2011, 2016, 2024-2025, D. R. Commander
+  2015, Intel Corporation
+  2016, 2024-2025, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/i386/jccolext-sse2.asm
+ simd/i386/jccolor-sse2.asm
+ simd/i386/jcgray-sse2.asm
+ simd/i386/jcgryext-sse2.asm
+ simd/x86_64/jccolor-sse2.asm
+ simd/x86_64/jcgray-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2024, D. R. Commander
+  2011, 2016, 2024-2025, D. R. Commander
+  2016, 2024-2025, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/mips64/jccolor-mmi.c
+ simd/mips64/jcgray-mmi.c
+ simd/mips64/jdcolor-mmi.c
+ simd/mips64/jdmerge-mmi.c
+ simd/mips64/jsimd_mmi.h
+ simd/mips64/loongson-mmintrin.h
+Copyright: 2011, 2014, D. R. Commander
+  2011, 2015, D. R. Commander
+  2016-2017, Loongson Technology Corporation Limited, BeiJing
+  2016-2018, Loongson Technology Corporation Limited, BeiJing
+  2019, D. R. Commander
+  2024, D. R. Commander
+License: Zlib
+
+Files: doc/turbojpeg/dynsections.js
+ doc/turbojpeg/menu.js
+ doc/turbojpeg/menudata.js
+ doc/turbojpeg/search/search.js
+Copyright: 1997-2020, Dimitri van Heesch
+License: Expat
+
+Files: java/doc/jquery/jszip-utils/dist/jszip-utils-ie.js
+ java/doc/jquery/jszip-utils/dist/jszip-utils-ie.min.js
+ java/doc/jquery/jszip-utils/dist/jszip-utils.js
+ java/doc/jquery/jszip-utils/dist/jszip-utils.min.js
+Copyright: 2014, Stuart Knightley, David Duponchel
+License: Expat
+
+Files: simd/x86_64/jfdctflt-sse.asm
+ simd/x86_64/jfdctfst-sse2.asm
+ simd/x86_64/jfdctint-sse2.asm
+ simd/x86_64/jsimdcpu.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2020, 2024-2025, D. R. Commander
+  2009, 2016, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2016, D. R. Commander
+  2023, Aliaksiej Kandracienka
+License: BSD-3-clause
+
+Files: simd/x86_64/jcsample-sse2.asm
+ simd/x86_64/jidctint-avx2.asm
+ simd/x86_64/jquantf-sse2.asm
+ simd/x86_64/jquanti-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2018, 2020, 2024-2025, D. R. Commander
+  2009, 2016, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2018, Matthias Räncker
+License: BSD-3-clause
+
+Files: simd/i386/jquanti-avx2.asm
+ simd/i386/jsimd.c
+ simd/powerpc/jsimd.c
+ simd/x86_64/jsimd.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009-2011, 2013-2014, 2016, 2018, 2022-2025, D. R. Commander
+  2009-2011, 2014, 2016, 2018, 2022-2025, D. R. Commander
+  2009-2011, 2014-2016, 2018, 2022, 2024, D. R. Commander
+  2015-2016, 2018, 2022, Matthieu Darbois
+  2016, 2018, 2024-2025, D. R. Commander
+  2016, Matthieu Darbois
+License: BSD-3-clause
+
+Files: doc/usage.txt
+ src/jpegtran.c
+ src/transupp.c
+ src/transupp.h
+Copyright: 1991-2020, Thomas G. Lane, Guido Vollbeding.
+  1995-2019, Thomas G. Lane, Guido Vollbeding.
+  1997-2019, Thomas G. Lane, Guido Vollbeding.
+  2010, 2012, 2014-2017, 2020-2024, D. R. Commander
+  2010, 2014, 2017, 2019-2022, 2024, D. R. Commander
+  2010, 2017, 2021-2022, 2024, D. R. Commander
+  2017, 2021, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/mips64/jccolext-mmi.c
+ simd/mips64/jcgryext-mmi.c
+ simd/mips64/jdcolext-mmi.c
+ simd/mips64/jdmrgext-mmi.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2014-2015, 2019, D. R. Commander
+  2015, 2019, 2025, D. R. Commander
+  2016-2018, Loongson Technology Corporation Limited, BeiJing
+License: Zlib
+
+Files: java/doc/jquery-ui.overrides.css
+ java/doc/script.js
+ java/doc/search.js
+Copyright: 2013, 2018, Oracle and/or its affiliates.
+  2015, 2018, Oracle and/or its affiliates.
+  2020, 2022, Oracle and/or its affiliates.
+License: GPL-2
+
+Files: src/rdcolmap.c
+ src/rdppm.c
+ src/wrgif.c
+Copyright: 1988, Jef Poskanzer.
+  1989, Jef Poskanzer.
+  1991-1997, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  2015, 2017, 2022-2023, D. R. Commander
+  2015-2017, 2020-2025, D. R. Commander
+  2022, D. R. Commander
+License: NTP
+
+Files: simd/x86_64/jdcolext-avx2.asm
+ simd/x86_64/jdmrgext-avx2.asm
+ simd/x86_64/jdsample-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2012, 2016, 2024-2025, D. R. Commander
+  2009, 2012, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009, 2016, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2015, Intel Corporation
+  2018, Matthias Räncker
+  2023, Aliaksiej Kandracienka
+License: BSD-3-clause
+
+Files: src/jdcol565.c
+ src/jdmrg565.c
+ src/wrbmp.c
+Copyright: 1991-1997, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  2013, Linaro Limited
+  2014-2015, 2017, 2019, 2022, 2024, D. R. Commander
+  2014-2015, 2018, 2020, 2022, D. R. Commander
+  2014-2015, 2022, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/arm/aarch64/jccolext-neon.c
+ simd/arm/align.h
+ simd/arm/jcgryext-neon.c
+Copyright: 2020, Arm Limited
+License: Zlib
+
+Files: java/doc/jquery/jquery-3.7.1.min.js
+ java/doc/jquery/external/jquery/jquery.js
+ java/doc/jquery/jquery-ui.min.css
+ java/doc/jquery/jquery-ui.min.js
+Copyright: (Open)JS Foundation and other contributors
+License: Expat
+
+Files: testimages/test1.icc.txt
+ testimages/test3.icc.txt
+Copyright: 1998-2011, Marti Maria Saguer
+License: Expat
+
+Files: simd/x86_64/jccolext-avx2.asm
+ simd/x86_64/jcgryext-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2024-2025, D. R. Commander
+  2011, 2016, 2024-2025, D. R. Commander
+  2015, Intel Corporation
+  2018, Matthias Räncker
+  2023, Aliaksiej Kandracienka
+License: BSD-3-clause
+
+Files: simd/x86_64/jccolext-sse2.asm
+ simd/x86_64/jcgryext-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2024-2025, D. R. Commander
+  2011, 2016, 2024-2025, D. R. Commander
+  2018, Matthias Räncker
+  2023, Aliaksiej Kandracienka
+License: BSD-3-clause
+
+Files: src/jdinput.c
+ src/jpeglib.h
+Copyright: 1991-1997, Thomas G. Lane
+  1991-1998, Thomas G. Lane
+  1999, Ken Murchison
+  2009-2011, 2013-2014, 2016-2017, 2020, 2022-2024, D. R. Commander
+  2010, 2016, 2018, 2022, 2024, D. R. Commander
+  2015, Google, Inc.
+License: BSD-BY-LC-NE
+
+Files: src/jdcoefct.c
+ src/jdcoefct.h
+Copyright: 1994-1997, Thomas G. Lane
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2010, 2015-2016, 2019-2020, 2022-2024, D. R. Commander
+  2015, 2020, Google, Inc.
+  2020, Google, Inc.
+  2022, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: src/djpeg.c
+ src/jdapistd.c
+Copyright: 1991-1997, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  2010, 2015-2020, 2022-2025, D. R. Commander
+  2010-2011, 2013-2017, 2019-2020, 2022-2024, D. R. Commander
+  2015, Google, Inc.
+License: BSD-BY-LC-NE
+
+Files: src/jdhuff.c
+ src/jdhuff.h
+Copyright: 1991-1997, Thomas G. Lane
+  1999, Ken Murchison
+  2009-2011, 2016, 2018-2019, 2022, D. R. Commander
+  2010-2011, 2015-2016, 2021, D. R. Commander
+  2018, Matthias Räncker
+License: BSD-BY-LC-NE
+
+Files: src/jdcolor.c
+ src/jdmerge.c
+Copyright: 1991-1997, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  2009, 2011, 2014-2015, 2020, 2022, D. R. Commander
+  2009, 2011-2012, 2014-2015, 2022, 2024, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2013, Linaro Limited
+License: BSD-BY-LC-NE
+
+Files: src/jccolor.c
+ src/jddctmgr.c
+Copyright: 1991-1996, Thomas G. Lane
+  1994-1996, Thomas G. Lane
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009-2012, 2015, 2022, 2024, D. R. Commander
+  2010, 2015, 2022, D. R. Commander
+  2013, MIPS Technologies, Inc., California
+  2014, MIPS Technologies, Inc., California
+License: BSD-BY-LC-NE
+
+Files: src/jcicc.c
+ src/jdicc.c
+Copyright: 1997-1998, Thomas G. Lane, Todd Newman
+  2017, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/powerpc/jccolext-altivec.c
+ simd/powerpc/jcgryext-altivec.c
+Copyright: 2014, Jay Foad
+  2014-2015, 2024, D. R. Commander
+License: Zlib
+
+Files: simd/arm/aarch32/jsimd_neon.S
+ simd/arm/aarch64/jsimd_neon.S
+Copyright: 2009-2011, Nokia Corporation and/or its subsidiary(-ies)
+  2013-2014, Linaro Limited
+  2014, Linaro Limited
+  2014, Siarhei Siamashka
+  2014-2016, 2020, D. R. Commander
+  2015, D. R. Commander
+  2015-2016, 2018, Matthieu Darbois
+  2016, Siarhei Siamashka
+License: Zlib
+
+Files: cmakescripts/GNUInstallDirs.cmake
+Copyright: 2011, 2013-2015, Kitware, Inc.
+  2011, Alex Neundorf
+  2011, Eric NOULARD
+  2011, Nikita Krupen'ko
+  2013, Dimitri John Ledkov
+  2014, Daniele E. Domenichelli
+  2014, Rolf Eike Beer
+  2015, Alex Turbov
+  2016, 2019, 2024, D. R. Commander
+  2016, 2021, Dmitry Marakasov
+  2016, Roger Leigh
+  2018, Matthias Räncker
+  2018, Tobias C. Berner
+License: BSD-3-clause
+
+Files: src/turbojpeg.c
+Copyright: 2009-2025, D. R. Commander
+  2021, Alex Richardson.
+License: BSD-3-clause
+
+Files: LICENSE.md
+Copyright: 2009-2025, D. R. Commander
+  2015, Viktor Szathmáry.
+  header in that file, then you can
+License: BSD-3-clause
+
+Files: src/md5/md5hl.c
+Copyright: 2016, 2018-2019, 2022, 2024-2025, D. R. Commander
+License: BSD-3-clause or Beerware
+
+Files: src/md5/md5.c
+Copyright: 2018, D. R. Commander
+License: BSD-3-clause or public-domain
+
+Files: doc/turbojpeg/jquery.js
+Copyright: 2007, Ariel Flesler - aflesler at gmail.com | https://github.com/flesler
+  2011-2014, Dave Furfero
+  2018, Steven Benner (http://stevenbenner.com/).
+  OpenJS Foundation and other contributors | jquery.org/license
+  jQuery Foundation and other contributors; Licensed MIT
+License: Expat
+
+Files: java/doc/jquery/jszip/dist/jszip.min.js
+Copyright: 2009-2016, Stuart Knightley <stuart [at] stuartk.com>
+License: Expat
+
+Files: java/doc/jquery/jszip/dist/jszip.js
+Copyright: 1995-2013, Jean-loup Gailly and Mark Adler
+  2009-2016, Stuart Knightley <stuart [at] stuartk.com>
+  2014-2017, Vitaly Puzrin and Andrey Tupitsin
+License: Expat or GPL-3
+
+Files: java/doc/legal/pako.md
+Copyright: 1995-2013, Jean-loup Gailly and Mark Adler
+  2014-2017, Vitaly Puzrin and Andrei Tuputcyn
+  2014-2017, Vitaly Puzrin and Andrey Tupitsin
+License: Expat or Zlib
+
+Files: src/rdgif.c
+Copyright: 1990, David Koblas. |
+  1991-1997, Thomas G. Lane
+  2021-2023, D. R. Commander
+License: NTP
+
+Files: src/jversion.h.in
+Copyright: 1991-2020, Thomas G. Lane, Guido Vollbeding
+  1991-2020, Thomas G. Lane, Guido Vollbeding
+  1999, Ken Murchison  1999-2006, MIYASAKA Masaru
+  2009, 2012, Pierre Ossman for Cendio AB
+  2009-2011, Nokia Corporation and/or its subsidiary(-ies)
+  2009-2024, D. R. Commander
+  2010, 2012-2024, D. R. Commander
+  2011-2016, Siarhei Siamashka
+  2013-2014, Linaro Limited
+  2013-2014, MIPS Technologies, Inc.
+  2015, 2020, Google, Inc.
+  2015, Intel Corporation
+  2015-2016, 2018, Matthieu Darbois
+  2019-2020, Arm Limited
+  @COPYRIGHT_YEAR@ The libjpeg-turbo Project and many others"
+License: BSD-BY-LC-NE
+
+Files: src/jcphuff.c
+Copyright: 1995-1997, Thomas G. Lane
+  1996-1997, Agner Fog.
+  1999, Ken Murchison
+  2011, 2015, 2018, 2021-2022, 2024, D. R. Commander
+  2016, 2018, 2022, Matthieu Darbois
+  2020, Arm Limited
+  2021, Alex Richardson.
+License: BSD-BY-LC-NE
+
+Files: src/jchuff.c
+Copyright: 1991-1997, Thomas G. Lane
+  1996-1997, Agner Fog. This code assumes we are on a two's complement machine.
+  1999, Ken Murchison
+  2009-2011, 2014-2016, 2018-2025, D. R. Commander
+  2015, Matthieu Darbois
+  2018, Matthias Räncker
+  2020, Arm Limited
+  2022, Felix Hanau
+License: BSD-BY-LC-NE
+
+Files: src/jpegint.h
+Copyright: 1991-1997, Thomas G. Lane
+  1999, Ken Murchison
+  2015, Google, Inc.
+  2015-2017, 2019, 2021-2022, 2024, D. R. Commander
+  2021, Alex Richardson
+License: BSD-BY-LC-NE
+
+Files: simd/x86_64/jchuff-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009-2011, 2014-2016, 2019, 2021, 2023-2025, D. R. Commander
+  2015, Matthieu Darbois
+  2018, Matthias RÃ¤ncker.
+  2023, Aliaksiej Kandracienka
+License: BSD-3-clause
+
+Files: simd/x86_64/jcphuff-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2016, 2018, Matthieu Darbois
+  2023, Aliaksiej Kandracienka
+  2024-2025, D. R. Commander
+License: BSD-3-clause
+
+Files: simd/arm/aarch32/jsimd.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009-2011, 2013-2014, 2016, 2018, 2022, 2024-2025, D. R. Commander
+  2011, Nokia Corporation and/or its subsidiary(-ies)
+  2015-2016, 2018, 2022, Matthieu Darbois
+  2019, Google LLC.
+  2020, Arm Limited
+License: BSD-3-clause
+
+Files: src/jdsample.c
+Copyright: 1991-1996, Thomas G. Lane
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2010, 2015-2016, 2022, 2024-2025, D. R. Commander
+  2014, MIPS Technologies, Inc., California
+  2015, Google, Inc.
+  2019-2020, Arm Limited
+License: BSD-BY-LC-NE
+
+Files: simd/jsimd.h
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2011, 2014-2016, 2018, 2020, 2022, D. R. Commander
+  2013-2014, MIPS Technologies, Inc., California
+  2014, Linaro Limited
+  2015-2016, 2018, 2022, Matthieu Darbois
+  2016-2018, Loongson Technology Corporation Limited, BeiJing
+  2020, Arm Limited
+License: BSD-3-clause
+
+Files: simd/arm/aarch64/jsimd.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009-2011, 2013-2014, 2016, 2018, 2020, 2022, 2024-2025, D. R. Commander
+  2011, Nokia Corporation and/or its subsidiary(-ies)
+  2015-2016, 2018, 2022, Matthieu Darbois
+  2020, Arm Limited
+License: BSD-3-clause
+
+Files: src/jsimd.h
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2011, 2014, 2022, D. R. Commander
+  2015-2016, 2018, 2022, Matthieu Darbois
+  2020, Arm Limited
+License: BSD-3-clause
+
+Files: simd/arm/jchuff.h
+Copyright: 1991-1997, Thomas G. Lane
+  2009, 2018, 2021, 2025, D. R. Commander
+  2018, Matthias Räncker
+  2020-2021, Arm Limited
+License: BSD-BY-LC-NE
+
+Files: src/jpeg_nbits.h
+Copyright: 2014, 2021, 2024-2025, D. R. Commander
+  2014, Olle Liljenzin.
+  2020, Arm Limited
+License: BSD-BY-LC-NE
+
+Files: src/jdmaster.c
+Copyright: 1991-1997, Thomas G. Lane
+  1999, Ken Murchison
+  2009-2011, 2016, 2019, 2022-2024, D. R. Commander
+  2013, Linaro Limited
+  2015, Google, Inc.
+License: BSD-BY-LC-NE
+
+Files: doc/libjpeg.txt
+Copyright: 1994-2013, Thomas G. Lane, Guido Vollbeding.
+  1999, Ken Murchison
+  2010, 2014-2018, 2020, 2022-2024, D. R. Commander
+  2015, Google, Inc.
+License: BSD-BY-LC-NE
+
+Files: simd/x86_64/jcsample-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2015, Intel Corporation
+  2018, Matthias Räncker
+License: BSD-3-clause
+
+Files: src/jcsample.c
+Copyright: 1991-1996, Thomas G. Lane
+  1999, Ken Murchison
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2014, MIPS Technologies, Inc., California
+  2015, 2019, 2022, 2024, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: doc/structure.txt
+Copyright: 1991-2012, Thomas G. Lane, Guido Vollbeding.
+  1999, Ken Murchison
+  2022-2023, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/mips64/jsimd.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009-2011, 2014, 2016, 2018, 2022, 2024, D. R. Commander
+  2013-2014, MIPS Technologies, Inc., California
+  2015, 2018, 2022, Matthieu Darbois
+  2016-2018, Loongson Technology Corporation Limited, BeiJing
+License: BSD-3-clause
+
+Files: simd/mips/jsimd.c
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2009-2011, 2014, 2016, 2018, 2020, 2022, 2024, D. R. Commander
+  2013-2014, MIPS Technologies, Inc., California
+  2015-2016, 2018, 2022, Matthieu Darbois
+License: BSD-3-clause
+
+Files: simd/i386/jchuff-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009-2011, 2014-2017, 2019, 2024-2025, D. R. Commander
+  2015, Matthieu Darbois
+  2018, Matthias Räncker
+License: BSD-3-clause
+
+Files: simd/x86_64/jquanti-avx2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, 2016, 2018, 2024-2025, D. R. Commander
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2016, Matthieu Darbois
+  2018, Matthias Räncker
+License: BSD-3-clause
+
+Files: src/jcdctmgr.c
+Copyright: 1994-1996, Thomas G. Lane
+  1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2011, 2014-2015, 2022, 2024, D. R. Commander
+License: BSD-BY-LC-NE
+
+Files: simd/nasm/jcolsamp.inc
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2015, Intel Corporation
+License: BSD-3-clause
+
+Files: simd/i386/jcphuff-sse2.asm
+Copyright: 1999-2006, MIYASAKA Masaru
+  2016, 2018, Matthieu Darbois
+  2025, D. R. Commander
+License: BSD-3-clause
+
+Files: src/jsimddct.h
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+License: BSD-3-clause
+
+Files: simd/nasm/jsimdext.inc
+Copyright: 1999-2006, MIYASAKA Masaru
+  2009, Pierre Ossman <ossman@cendio.se> for Cendio AB
+  2010, 2016, 2018-2019, 2024, D. R. Commander
+  2018, Matthias Räncker
+  2018, Matthieu Darbois
+  2023, Aliaksiej Kandracienka
+License: Zlib
+
+Files: simd/arm/jcphuff-neon.c
+Copyright: 2020-2021, Arm Limited
+  2022, 2024-2025, D. R. Commander
+  2022, Matthieu Darbois
+License: Zlib
+
+Files: simd/mips/jsimd_dspr2.S
+Copyright: 2013-2014, MIPS Technologies, Inc., California
+  2015, D. R. Commander
+License: Zlib
+
+Files: simd/mips/jsimd_dspr2_asm.h
+Copyright: 2013, MIPS Technologies, Inc., California
+  2018, Matthieu Darbois
+License: Zlib
+
+Files: debian/*
+Copyright:
+ 2020-2026, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+ 2014,      Ondřej Surý <ondrej@debian.org>
+ 2012-2013, Debian TigerVNC Packaging Team <pkg-tigervnc-devel@lists.alioth.debian.org>
+ 2011-2012, Canonical Ltd.
+ 2011-2012, Linaro Inc.
+License: BSD-3-clause
+
+Files: debian/tests/libjpeg62-turbo-dev
+ debian/tests/libjpeg62-turbo-dev-static
+Copyright: 2021, Simon McVittie
+License: Expat
+
+Files: debian/extra/*
+Copyright:
+ 2005, Guido Vollbeding <guido@jpegclub.org>
+License: BSD-BY-LC-NE
+Comment:
+ No license information present in file headers.
+ .
+ Assume same license as for Files: * as author of these files
+ has also been involved in development of the rest of the
+ project files.
+
+Files: debian/missing-sources/jquery*
+Copyright: Copyright 2011, John Resig
+           Copyright 2011, The Dojo Foundation
+License: Expat
+
+Files: debian/tjbench.1.in
+Copyright: 2009-2019, 2021, D. R. Commander
+License: BSD-3-clause
+
+License: BSD-BY-LC-NE
+ In plain English:
+ .
+ 1. We don't promise that this software works.  (But if you find any bugs,
+    please let us know!)
+ 2. You can use this software for whatever you want.  You don't have to pay us.
+ 3. You may not pretend that you wrote this software.  If you use it in a
+    program, you must acknowledge somewhere in your documentation that
+    you've used the IJG code.
+ .
+ In legalese:
+ .
+ The authors make NO WARRANTY or representation, either express or implied,
+ with respect to this software, its quality, accuracy, merchantability, or
+ fitness for a particular purpose.  This software is provided "AS IS", and you,
+ its user, assume the entire risk as to its quality and accuracy.
+ .
+ This software is copyright (C) 1991-2020, Thomas G. Lane, Guido Vollbeding.
+ All Rights Reserved except as specified below.
+ .
+ Permission is hereby granted to use, copy, modify, and distribute this
+ software (or portions thereof) for any purpose, without fee, subject to these
+ conditions:
+ (1) If any part of the source code for this software is distributed, then this
+ README file must be included, with this copyright and no-warranty notice
+ unaltered; and any additions, deletions, or changes to the original files
+ must be clearly indicated in accompanying documentation.
+ (2) If only executable code is distributed, then the accompanying
+ documentation must state that "this software is based in part on the work of
+ the Independent JPEG Group".
+ (3) Permission for use of this software is granted only if the user accepts
+ full responsibility for any undesirable consequences; the authors accept
+ NO LIABILITY for damages of any kind.
+ .
+ These conditions apply to any software derived from or based on the IJG code,
+ not just to the unmodified library.  If you use our work, you ought to
+ acknowledge us.
+ .
+ Permission is NOT granted for the use of any IJG author's name or company name
+ in advertising or publicity relating to this software or products derived from
+ it.  This software may be referred to only as "the Independent JPEG Group's
+ software".
+ .
+ We specifically permit and encourage the use of this software as the basis of
+ commercial products, provided that all warranty or liability claims are
+ assumed by the product vendor.
+ .
+ The complete license information can be found in README.ijg, as shipped
+ in the libjpeg-turbo source code.
+
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ - Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+ - Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+ - Neither the name of the libjpeg-turbo Project nor the names of its
+   contributors may be used to endorse or promote products derived from this
+   software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS",
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+License: NTP
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted, provided
+ that the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation.  This software is provided "as is" without express or
+ implied warranty.
+
+License: Zlib
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any damages
+ arising from the use of this software.
+ .
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+ .
+ 1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+ 2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+ 3. This notice may not be removed or altered from any source distribution.
+
+License: GPL-2
+ This package is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License can be found in "/usr/share/common-licenses/GPL-2".
+
+License: GPL-3
+ This package is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 3 of the License.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License can be found in "/usr/share/common-licenses/GPL-3".
+
+License: public-domain
+ This code was written by the author, no copyright is claimed.
+ This code is in the public domain; do with it what you wish.
+
+License: Beerware
+ "THE BEER-WARE LICENSE" (Revision 42): The author wrote this file.  As
+ long as you retain this notice you can do whatever you want with this
+ stuff. If we meet some day, and you think this stuff is worth it, you
+ can buy me a beer in return.

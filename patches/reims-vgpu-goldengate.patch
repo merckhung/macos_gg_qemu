@@ -1,0 +1,1313 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index c82d6926..8fe52dcd 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -301,6 +301,7 @@ checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
+ [[package]]
+ name = "metal2vulkan"
+ version = "0.2.0"
++source = "git+https://github.com/steelbrain/metal2vulkan?rev=f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8#f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8"
+ dependencies = [
+  "ash",
+  "metal2vulkan-air",
+@@ -311,6 +312,7 @@ dependencies = [
+ [[package]]
+ name = "metal2vulkan-air"
+ version = "0.2.0"
++source = "git+https://github.com/steelbrain/metal2vulkan?rev=f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8#f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8"
+ dependencies = [
+  "sha2 0.11.1",
+ ]
+@@ -318,6 +320,7 @@ dependencies = [
+ [[package]]
+ name = "metal2vulkan-runtime"
+ version = "0.2.0"
++source = "git+https://github.com/steelbrain/metal2vulkan?rev=f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8#f6a96b7da82f3032e3fd7b1dc52c07bfd9b78dc8"
+ dependencies = [
+  "ash",
+  "libc",
+diff --git a/crates/reims-vgpu-core/src/guest/records.rs b/crates/reims-vgpu-core/src/guest/records.rs
+index 9b6d04fa..df17b6cf 100644
+--- a/crates/reims-vgpu-core/src/guest/records.rs
++++ b/crates/reims-vgpu-core/src/guest/records.rs
+@@ -22,7 +22,20 @@ use crate::num::Truncate;
+ /// serves arm64 guests, an x86-64 build x86-64 ones (core's tests also run as x86-64 under
+ /// Rosetta on a Mac). Every page number the guest hands the device counts these pages. Name is
+ /// ours: the shift of `APV_PAGE_SIZE`.
+-pub const APV_PAGE_SHIFT: u32 = if cfg!(target_arch = "x86_64") { 12 } else { 14 };
++///
++/// `RVG_GUEST_PAGE_SHIFT=14` (or `12`) in the build's environment overrides it, for an arm64
++/// guest that QEMU's TCG runs on an x86-64 host.
++pub const APV_PAGE_SHIFT: u32 = match option_env!("RVG_GUEST_PAGE_SHIFT") {
++    Some(s) if s.len() == 2 && s.as_bytes()[0] == b'1' && s.as_bytes()[1] == b'4' => 14,
++    Some(s) if s.len() == 2 && s.as_bytes()[0] == b'1' && s.as_bytes()[1] == b'2' => 12,
++    _ => {
++        if cfg!(target_arch = "x86_64") {
++            12
++        } else {
++            14
++        }
++    }
++};
+ 
+ /// `APV_PAGE_SIZE`: the guest page size, 16 KiB (4 KiB on x86-64).
+ pub const APV_PAGE_SIZE: u64 = 1_u64.wrapping_shl(APV_PAGE_SHIFT);
+diff --git a/crates/reims-vgpu-core/src/iosurface/descriptor.rs b/crates/reims-vgpu-core/src/iosurface/descriptor.rs
+index 122b9d1c..4ef5c9b6 100644
+--- a/crates/reims-vgpu-core/src/iosurface/descriptor.rs
++++ b/crates/reims-vgpu-core/src/iosurface/descriptor.rs
+@@ -447,7 +447,9 @@ pub(super) fn plane_specs(
+ /// lists each of its pages as a client address range; a host-only one lists none. The
+ /// surface-level compression type goes under the plane key, as the device has always sent it.
+ pub(super) fn surface_spec<P: Platform>(
+-    p: &P,
++    // Unused since the page size is the guest's (`APV_PAGE_SIZE`), which an arm64 guest on an
++    // x86-64 host does not share with the host's VM; kept so the callers stay as upstream's.
++    _p: &P,
+     descriptor: &IoSurfaceDeviceDescriptor2,
+     slot: &mut SurfaceSlot<P>,
+ ) -> Option<SurfaceSpec> {
+@@ -498,7 +500,7 @@ pub(super) fn surface_spec<P: Platform>(
+         log::debug!("the surface is host-only");
+         return Some(spec);
+     }
+-    let page = p.vm().page_size();
++    let page = crate::guest::records::APV_PAGE_SIZE;
+     spec.client_address_ranges = Some(
+         slot.pages
+             .iter()
+diff --git a/crates/reims-vgpu-core/src/iosurface/device.rs b/crates/reims-vgpu-core/src/iosurface/device.rs
+index 98fdd2dc..07d5e07f 100644
+--- a/crates/reims-vgpu-core/src/iosurface/device.rs
++++ b/crates/reims-vgpu-core/src/iosurface/device.rs
+@@ -273,7 +273,7 @@ impl<P: Platform> IoSurfaceHostDevice<P> {
+         platform: &Arc<P>,
+         descriptor: &IoSurfaceHostDeviceDescriptor,
+     ) -> Result<HostDeviceHandle<P>, IoSurfaceRefusal> {
+-        let page = platform.vm().page_size();
++        let page = crate::guest::records::APV_PAGE_SIZE;
+         let table_len = page / const { NonZeroU64::new(TABLE_ENTRY_SIZE).unwrap() };
+         let descriptors_per_page = page / Form::First.size();
+         let mmio_length = descriptor.mmio_length;
+@@ -376,14 +376,14 @@ impl<P: Platform> HostDeviceCore<P> {
+             })
+     }
+ 
+-    /// The VM page size.
++    /// The guest page size (the VM's, where the guest's architecture is the host's).
+     pub(super) fn page_size(&self) -> u64 {
+-        self.platform.vm().page_size()
++        crate::guest::records::APV_PAGE_SIZE
+     }
+ 
+-    /// The VM page shift.
++    /// The guest page shift (the VM's, where the guest's architecture is the host's).
+     pub(super) fn page_shift(&self) -> u32 {
+-        self.platform.vm().page_shift()
++        crate::guest::records::APV_PAGE_SHIFT
+     }
+ 
+     /// Another reference to the IOSurface mapped at `mapping_id`, made on the device's queue;
+diff --git a/crates/reims-vgpu-vulkan/src/api.rs b/crates/reims-vgpu-vulkan/src/api.rs
+index 4a1bb2a9..9e77b291 100644
+--- a/crates/reims-vgpu-vulkan/src/api.rs
++++ b/crates/reims-vgpu-vulkan/src/api.rs
+@@ -39,6 +39,7 @@ mod tests {
+         let raw = d.raw.new_texture(&desc).unwrap();
+         let all = rt::Region::new_2d(0, 0, width, height);
+         raw.replace_region(all, 0, 0, px, width * 4, 0).unwrap();
++        let guest_sample_count = raw.sample_count();
+         Obj::new(TextureObject {
+             raw,
+             device: d.clone_ref(),
+@@ -48,6 +49,7 @@ mod tests {
+             private_usage: 0,
+             space: std::sync::Arc::new(crate::gpu::metal_space::Hold::NONE),
+             gpu_read_only: false,
++            guest_sample_count,
+         })
+     }
+ 
+diff --git a/crates/reims-vgpu-vulkan/src/gpu/command.rs b/crates/reims-vgpu-vulkan/src/gpu/command.rs
+index 9cc9d43b..84bdcefb 100644
+--- a/crates/reims-vgpu-vulkan/src/gpu/command.rs
++++ b/crates/reims-vgpu-vulkan/src/gpu/command.rs
+@@ -281,6 +281,38 @@ pub struct CommandBufferObject {
+     /// The executions of indirect command buffers whose commands its commit reads, each with its
+     /// encoder's place ([`CommandBufferObject::checked_at_commit`]).
+     executions: Mutex<Vec<(usize, executions::Execution)>>,
++    /// Host-side sample down-conversions for `2 -> 4` promoted MSAA `CopyTextureToBuffer` blits,
++    /// drained once after GPU execution completes and before guest completion handlers fire.
++    pub(crate) post_gpu_copies: Arc<PostGpuCopies>,
++}
++
++/// Host callbacks run once when a command buffer's GPU work finishes.
++#[derive(Default)]
++pub(crate) struct PostGpuCopies(Mutex<Vec<Box<dyn FnOnce() + Send>>>);
++
++impl std::fmt::Debug for PostGpuCopies {
++    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++        f.debug_tuple("PostGpuCopies")
++            .field(&self.0.lock().len())
++            .finish()
++    }
++}
++
++impl PostGpuCopies {
++    pub(crate) fn push(&self, f: Box<dyn FnOnce() + Send>) {
++        self.0.lock().push(f);
++    }
++
++    pub(crate) fn is_empty(&self) -> bool {
++        self.0.lock().is_empty()
++    }
++
++    pub(crate) fn run(&self) {
++        let callbacks = std::mem::take(&mut *self.0.lock());
++        for cb in callbacks {
++            cb();
++        }
++    }
+ }
+ 
+ /// The submission handler of a command buffer that holds work for Metal's tiler
+@@ -896,6 +928,7 @@ impl CommandQueue<VulkanPlatform> for VulkanCommandQueue {
+             protection: Mutex::new(Protection::default()),
+             tiler: AtomicBool::new(false),
+             executions: Mutex::new(Vec::new()),
++            post_gpu_copies: Arc::default(),
+         })))
+     }
+ 
+@@ -1220,7 +1253,9 @@ impl CommandBuffer<VulkanPlatform> for VulkanCommandBuffer {
+     /// none of Metal's dies as the handler reads it, unless the isolated task whose code added
+     /// the handler ended ([`completed_handler`]).
+     fn add_completed_handler(&self, _on: OnFault, block: CompletedHandler) -> RaiseResult<()> {
+-        let handler = completed_handler(block, TaskLife::current(), |cb| {
++        let post = Arc::clone(&self.post_gpu_copies);
++        let handler = completed_handler(block, TaskLife::current(), move |cb| {
++            post.run();
+             failure(cb);
+         });
+         send("addCompletedHandler:", Policy::Dies, || {
+@@ -1269,6 +1304,12 @@ impl CommandBuffer<VulkanPlatform> for VulkanCommandBuffer {
+             if let Some(progress) = &progress {
+                 progress.committing();
+             }
++            if !self.post_gpu_copies.is_empty() {
++                let post = Arc::clone(&self.post_gpu_copies);
++                let _ = self
++                    .raw
++                    .add_completed_handler(Box::new(move |_| post.run()));
++            }
+             committing(|| {
+                 timing::commit(&self.raw, || match (failure, check) {
+                     (Some(failure), _) => self.raw.commit_failed(failure),
+@@ -1425,6 +1466,7 @@ impl CommandBuffer<VulkanPlatform> for VulkanCommandBuffer {
+     fn wait_until_completed(&self, _on: OnFault) -> RaiseResult<()> {
+         const SEL: &str = "waitUntilCompleted";
+         waiting(SEL, || self.raw.wait_until_completed())?;
++        self.post_gpu_copies.run();
+         match plain(|| self.raw.error()) {
+             Some(rt::CommandBufferError::PipelineCreation(_)) => failed_pipeline(SEL, &self.raw),
+             Some(rt::CommandBufferError::Refused) => refused_step(SEL, &self.raw),
+diff --git a/crates/reims-vgpu-vulkan/src/gpu/device.rs b/crates/reims-vgpu-vulkan/src/gpu/device.rs
+index 7554b72d..3108f3d8 100644
+--- a/crates/reims-vgpu-vulkan/src/gpu/device.rs
++++ b/crates/reims-vgpu-vulkan/src/gpu/device.rs
+@@ -209,6 +209,30 @@ pub(crate) fn nil_pipeline_descriptor() -> NsErrorText {
+     }
+ }
+ 
++/// Whether this process has logged its relaxed 4-sample substitution for a 2-sample request.
++static RELAYED_SAMPLE_COUNT_2: std::sync::atomic::AtomicBool =
++    std::sync::atomic::AtomicBool::new(false);
++
++/// Substitutes 4 samples for `samples == 2` outside strict mode when the device supports 4 samples
++/// without 2 samples.
++fn promoted_sample_count(
++    sel: &'static str,
++    samples: u64,
++    supports_2: bool,
++    supports_4: bool,
++) -> u64 {
++    if samples == 2 && !crate::answer::strict() && !supports_2 && supports_4 {
++        if !RELAYED_SAMPLE_COUNT_2.swap(true, std::sync::atomic::Ordering::Relaxed) {
++            log::warn!(
++                "{sel}: sampleCount 2 promoted to 4 outside strict mode because the Vulkan \
++                 device supports 4x MSAA without 2x MSAA"
++            );
++        }
++        return 4;
++    }
++    samples
++}
++
+ /// The devices made in the process, by registry ID, each the one object every handle to it is.
+ /// Each is kept for the process, as Metal's device is: a device the host releases and opens again
+ /// is the same runtime device, whose spaces of IDs (textures', sampler states', pipeline states'
+@@ -466,6 +490,23 @@ impl VulkanDevice {
+         })
+     }
+ 
++    /// Promotes a 2-sample request to 4 samples outside strict mode when the Vulkan device
++    /// supports 4x MSAA without 2x MSAA (for example Mesa Lavapipe, whose framebuffer sample mask
++    /// is `1 | 4`, while ParavirtualizedGraphics advertises scalar `maxSampleCount = 4` so macOS
++    /// apps such as `Chess.app` ask for 2x MSAA).
++    pub(crate) fn effective_sample_count(&self, sel: &'static str, samples: u64) -> u64 {
++        if samples == 2 && !crate::answer::strict() {
++            let props = self.raw.properties();
++            return promoted_sample_count(
++                sel,
++                samples,
++                matches!(props.supports_texture_sample_count(2), Ok(true)),
++                matches!(props.supports_texture_sample_count(4), Ok(true)),
++            );
++        }
++        samples
++    }
++
+     /// The handle of a texture this device made, on `surface` when it was made on one, answering
+     /// the usage bits `private_usage` beyond the runtime's ([`TextureObject::private_usage`]),
+     /// holding `space` of Metal's address space.
+@@ -475,6 +516,19 @@ impl VulkanDevice {
+         surface: Option<Arc<OsSurface>>,
+         private_usage: u64,
+         space: Arc<metal_space::Hold>,
++    ) -> VulkanTexture {
++        let guest_sample_count = plain(|| raw.sample_count());
++        self.texture_of_with_guest_samples(raw, surface, private_usage, space, guest_sample_count)
++    }
++
++    /// Like [`VulkanDevice::texture_of`], recording the guest descriptor's original sample count.
++    pub(crate) fn texture_of_with_guest_samples(
++        &self,
++        raw: rt::Texture,
++        surface: Option<Arc<OsSurface>>,
++        private_usage: u64,
++        space: Arc<metal_space::Hold>,
++        guest_sample_count: u64,
+     ) -> VulkanTexture {
+         let gpu_read_only = crate::gpu::resource::writes_never_reach(surface.as_deref(), None);
+         Obj::new(TextureObject {
+@@ -486,6 +540,7 @@ impl VulkanDevice {
+             private_usage,
+             space,
+             gpu_read_only,
++            guest_sample_count,
+         })
+     }
+ 
+@@ -498,6 +553,18 @@ impl VulkanDevice {
+         raw: rt::Texture,
+         under: Under,
+         private_usage: u64,
++    ) -> VulkanTexture {
++        let guest_sample_count = plain(|| raw.sample_count());
++        self.texture_in_with_guest_samples(raw, under, private_usage, guest_sample_count)
++    }
++
++    /// Like [`VulkanDevice::texture_in`], recording the guest descriptor's original sample count.
++    pub(crate) fn texture_in_with_guest_samples(
++        &self,
++        raw: rt::Texture,
++        under: Under,
++        private_usage: u64,
++        guest_sample_count: u64,
+     ) -> VulkanTexture {
+         let kind = match under {
+             Under::Buffer(..) => metal_space::TextureKind::OverBuffer,
+@@ -514,6 +581,7 @@ impl VulkanDevice {
+             private_usage,
+             space,
+             gpu_read_only,
++            guest_sample_count,
+         })
+     }
+ 
+@@ -756,7 +824,8 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+     ) -> RaiseResult<SizeAndAlign> {
+         let sel = "heapTextureSizeAndAlignWithDescriptor:";
+         let fields = desc.fields();
+-        let desc = fields.descriptor(sel, Maker::SizeQuery);
++        let mut desc = fields.descriptor(sel, Maker::SizeQuery);
++        desc.sample_count = self.effective_sample_count(sel, desc.sample_count);
+         let raw = fields.raw_pixel_format();
+         let (answer, heard) = hearing(|| {
+             send(sel, Policy::Dies, || {
+@@ -1187,7 +1256,9 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+         {
+             return Ok(None);
+         }
+-        let desc = fields.descriptor(sel, Maker::Shared);
++        let mut desc = fields.descriptor(sel, Maker::Shared);
++        let guest_sample_count = desc.sample_count;
++        desc.sample_count = self.effective_sample_count(sel, desc.sample_count);
+         // Its range of Metal's space, placed before the runtime makes it, at `Private` storage,
+         // where it would be made: its allocation is sized by Apple's layout from Metal's
+         // description of its format, so a format the device's Metal level describes and macOS
+@@ -1220,7 +1291,8 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+         if made.is_some() {
+             fields.made_unprotected(sel);
+         }
+-        Ok(made.map(|raw| self.texture_of(raw, None, 0, space)))
++        Ok(made
++            .map(|raw| self.texture_of_with_guest_samples(raw, None, 0, space, guest_sample_count)))
+     }
+ 
+     /// The texture of a handle of this process, its resource ID at `resource_index` (0: one the
+@@ -1277,7 +1349,9 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+     ) -> RaiseResult<Option<VulkanTexture>> {
+         let sel = "newTextureWithDescriptor:";
+         let fields = descriptor.fields();
+-        let desc = fields.descriptor(sel, Maker::Other);
++        let mut desc = fields.descriptor(sel, Maker::Other);
++        let guest_sample_count = desc.sample_count;
++        desc.sample_count = self.effective_sample_count(sel, desc.sample_count);
+         let raw = fields.raw_pixel_format();
+         let kind = match desc.resource_options.storage_mode() {
+             Ok(rt::StorageMode::Memoryless) => TextureKind::Memoryless,
+@@ -1311,7 +1385,8 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+         if made.is_some() {
+             fields.made_unprotected(sel);
+         }
+-        Ok(made.map(|raw| self.texture_of(raw, None, 0, space)))
++        Ok(made
++            .map(|raw| self.texture_of_with_guest_samples(raw, None, 0, space, guest_sample_count)))
+     }
+ 
+     /// A texture over a no-copy buffer of all of the surface's memory, of its plane at the plane's
+@@ -1407,6 +1482,7 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+             return Ok(None);
+         };
+         let gpu_read_only = crate::gpu::resource::writes_never_reach(Some(&surface), None);
++        let guest_sample_count = plain(|| raw.sample_count());
+         Ok(Some(Obj::new(TextureObject {
+             raw,
+             device: self.clone_ref(),
+@@ -1416,6 +1492,7 @@ impl GpuDevice<VulkanPlatform> for VulkanDevice {
+             under: None,
+             private_usage: usage,
+             gpu_read_only,
++            guest_sample_count,
+         })))
+     }
+ 
+@@ -2872,6 +2949,155 @@ pub(crate) mod tests {
+         assert_eq!(site.file, "newSharedEventWithHandle:");
+     }
+ 
++    /// A 2-sample request stays 2 in strict mode and promotes to 4 outside strict mode when the
++    /// Vulkan device supports 4x MSAA without 2x MSAA (such as Mesa Lavapipe).
++    #[test]
++    fn sample_count_2_promotes_to_4_outside_strict_mode_when_2x_msaa_lacked() {
++        use reims_vgpu_core::platform::Platform as _;
++        use reims_vgpu_core::platform::resource::Texture as _;
++        use reims_vgpu_core::platform::values::TextureDesc;
++
++        assert_eq!(
++            promoted_sample_count("newTextureWithDescriptor:", 2, false, true),
++            2
++        );
++        crate::answer::relaxed(|| {
++            assert_eq!(
++                promoted_sample_count("newTextureWithDescriptor:", 2, false, true),
++                4
++            );
++            assert_eq!(
++                promoted_sample_count("newTextureWithDescriptor:", 2, true, true),
++                2
++            );
++            assert_eq!(
++                promoted_sample_count("newTextureWithDescriptor:", 2, false, false),
++                2
++            );
++            assert_eq!(
++                promoted_sample_count("newTextureWithDescriptor:", 1, false, true),
++                1
++            );
++            assert_eq!(
++                promoted_sample_count("newTextureWithDescriptor:", 4, false, true),
++                4
++            );
++        });
++
++        let d = dev();
++        if !matches!(
++            d.raw.properties().supports_texture_sample_count(2),
++            Ok(true)
++        ) && matches!(
++            d.raw.properties().supports_texture_sample_count(4),
++            Ok(true)
++        ) {
++            let p = crate::platform::tests::platform();
++            let desc = p.texture_descriptor(&TextureDesc {
++                texture_type: 4,  // MTLTextureType2DMultisample
++                pixel_format: 80, // BGRA8Unorm
++                width: 64,
++                height: 64,
++                depth: 1,
++                mipmap_level_count: 1,
++                sample_count: 2,
++                array_length: 1,
++                resource_options: Some(0x20), // MTLStorageModePrivate
++                usage: 0x5,                   // ShaderRead | RenderTarget
++                ..TextureDesc::default()
++            });
++            let tex = crate::answer::relaxed(|| d.new_texture(OnFault::Return, &desc))
++                .unwrap()
++                .expect("2x MSAA texture should succeed via 4x promotion on Lavapipe");
++            assert_eq!(tex.sample_count(), 2);
++            assert_eq!(tex.raw.sample_count(), 4);
++            assert!(tex.promoted_2_to_4_samples());
++
++            // Verify 2-sample guest buffer <-> promoted 4-sample Vulkan texture blit paging
++            // (width=4, height=2, BGRA8Unorm => 4 * 4 * 2 = 32 bytes/row in guest buffer, vs 64 on host).
++            use reims_vgpu_core::platform::blit::{BlitCmd, BlitEncoder};
++            use reims_vgpu_core::platform::command::{CommandBuffer, CommandQueue};
++            use reims_vgpu_core::platform::types::{MtlOrigin, MtlSize};
++            let desc_small = p.texture_descriptor(&TextureDesc {
++                texture_type: 4,
++                pixel_format: 80,
++                width: 4,
++                height: 2,
++                depth: 1,
++                mipmap_level_count: 1,
++                sample_count: 2,
++                array_length: 1,
++                resource_options: Some(0x20),
++                usage: 0x5,
++                ..TextureDesc::default()
++            });
++            let msaa = crate::answer::relaxed(|| d.new_texture(OnFault::Return, &desc_small))
++                .unwrap()
++                .unwrap();
++            let raw_in = d.raw.new_buffer(64, rt::ResourceOptions::shared()).unwrap();
++            let raw_out = d.raw.new_buffer(64, rt::ResourceOptions::shared()).unwrap();
++            let expected: Vec<u8> = (0u8..64)
++                .map(|i| i.wrapping_mul(3).wrapping_add(7))
++                .collect();
++            unsafe {
++                std::ptr::copy_nonoverlapping(
++                    expected.as_ptr(),
++                    raw_in.contents().unwrap().as_ptr(),
++                    64,
++                );
++            }
++            let buf_in = d.buffer(raw_in, None);
++            let buf_out = d.buffer(raw_out, None);
++            crate::answer::relaxed(|| {
++                let q = d.new_command_queue().unwrap();
++                let cb = q.command_buffer(OnFault::Return).unwrap().unwrap();
++                let enc = cb.blit_encoder(OnFault::Return).unwrap().unwrap();
++                enc.encode(
++                    OnFault::Return,
++                    BlitCmd::CopyBufferToTextureOptions {
++                        source_buffer: Some(&buf_in),
++                        source_offset: 0,
++                        source_bytes_per_row: 32,
++                        source_bytes_per_image: 64,
++                        source_size: MtlSize::new(4, 2, 1),
++                        destination_texture: Some(&msaa),
++                        destination_slice: 0,
++                        destination_level: 0,
++                        destination_origin: MtlOrigin::new(0, 0, 0),
++                        options: 0,
++                    },
++                )
++                .unwrap();
++                enc.encode(
++                    OnFault::Return,
++                    BlitCmd::CopyTextureToBufferOptions {
++                        source_texture: Some(&msaa),
++                        source_slice: 0,
++                        source_level: 0,
++                        source_origin: MtlOrigin::new(0, 0, 0),
++                        source_size: MtlSize::new(4, 2, 1),
++                        destination_buffer: Some(&buf_out),
++                        destination_offset: 0,
++                        destination_bytes_per_row: 32,
++                        destination_bytes_per_image: 64,
++                        options: 0,
++                    },
++                )
++                .unwrap();
++                enc.encode(OnFault::Return, BlitCmd::EndEncoding).unwrap();
++                cb.commit(OnFault::Return).unwrap();
++                cb.wait_until_completed(OnFault::Return).unwrap();
++            });
++            let actual = unsafe {
++                std::slice::from_raw_parts(
++                    buf_out.raw.contents().unwrap().as_ptr() as *const u8,
++                    64,
++                )
++            };
++            assert_eq!(actual, expected.as_slice());
++        }
++    }
++
+     #[cfg(target_os = "macos")]
+     pub(crate) mod metal_tests;
+ }
+diff --git a/crates/reims-vgpu-vulkan/src/gpu/encode_blit.rs b/crates/reims-vgpu-vulkan/src/gpu/encode_blit.rs
+index 430171f3..7e26a326 100644
+--- a/crates/reims-vgpu-vulkan/src/gpu/encode_blit.rs
++++ b/crates/reims-vgpu-vulkan/src/gpu/encode_blit.rs
+@@ -615,6 +615,182 @@ fn buffer_copy_shape(
+     )
+ }
+ 
++/// Bytes per single sample in a buffer<->multisample-texture copy under `options`.
++fn promoted_msaa_unit_bytes(
++    raw: &rt::Texture,
++    options: rt::BlitOption,
++    sel: &'static str,
++) -> Option<usize> {
++    let bytes = match options {
++        rt::BlitOption::StencilFromDepthStencil => 1,
++        rt::BlitOption::DepthFromDepthStencil => match plain(|| raw.pixel_format()) {
++            PixelFormat::Depth16Unorm => 2,
++            _ => 4,
++        },
++        rt::BlitOption::None => {
++            let pf = plain(|| raw.pixel_format());
++            let b = crate::gpu::format_info::block(
++                sel,
++                u64::from(pf.as_raw()),
++                "a multisampled blit copy of",
++            );
++            if b.compressed() {
++                return None;
++            }
++            b.bytes()
++        }
++        _ => return None,
++    };
++    usize::try_from(bytes).ok().filter(|&u| u > 0)
++}
++
++/// Expands a 2-sample-per-pixel guest/shared buffer region `(s0, s1)` into a tightly packed
++/// 4-sample-per-pixel shared staging buffer `(s0, s0, s1, s1)` for a `2 -> 4` promoted texture.
++fn expand_promoted_2_to_4_upload(
++    source: &crate::gpu::resource::VulkanBuffer,
++    source_offset: u64,
++    source_bytes_per_row: u64,
++    source_bytes_per_image: u64,
++    source_size: MtlSize,
++    destination_texture: &VulkanTexture,
++    options: rt::BlitOption,
++    sel: &'static str,
++) -> Option<(rt::Buffer, u64, u64)> {
++    if !destination_texture.promoted_2_to_4_samples() {
++        return None;
++    }
++    let w = usize::try_from(source_size.width).ok().filter(|&v| v > 0)?;
++    let h = usize::try_from(source_size.height)
++        .ok()
++        .filter(|&v| v > 0)?;
++    let d = usize::try_from(source_size.depth).ok().filter(|&v| v > 0)?;
++    let u = promoted_msaa_unit_bytes(&destination_texture.raw, options, sel)?;
++    let src_ptr = plain(|| source.raw.contents())?;
++    let src_cap = usize::try_from(plain(|| source.raw.length())).unwrap_or(usize::MAX);
++    let base_off = usize::try_from(source_offset).ok()?;
++    let row_stride = usize::try_from(source_bytes_per_row).ok()?;
++    let img_stride = usize::try_from(source_bytes_per_image).ok()?;
++    let pix2 = 2usize.checked_mul(u)?;
++    let pix4 = 4usize.checked_mul(u)?;
++    let row2_bytes = w.checked_mul(pix2)?;
++    let row4 = w.checked_mul(pix4)?;
++    let img4 = row4.checked_mul(h)?;
++    let total4 = img4.checked_mul(d)?;
++    let last_row = base_off
++        .checked_add((d - 1).checked_mul(img_stride)?)?
++        .checked_add((h - 1).checked_mul(row_stride)?)?;
++    if last_row.checked_add(row2_bytes)? > src_cap {
++        return None;
++    }
++    let staging4 = plain(|| {
++        destination_texture
++            .device
++            .raw
++            .new_buffer(total4 as u64, rt::ResourceOptions::shared())
++    })
++    .ok()?;
++    let dst_ptr = plain(|| staging4.contents())?;
++    // SAFETY: `last_row + row2_bytes <= src_cap` bounds-checks the mapped source buffer, and
++    // `staging4` was just allocated with `total4` mapped writable bytes.
++    unsafe {
++        let src_base = src_ptr.as_ptr() as *const u8;
++        let dst_base = dst_ptr.as_ptr();
++        for z in 0..d {
++            for y in 0..h {
++                let s_row = src_base.add(base_off + z * img_stride + y * row_stride);
++                let d_row = dst_base.add(z * img4 + y * row4);
++                for x in 0..w {
++                    let s_px = s_row.add(x * pix2);
++                    let d_px = d_row.add(x * pix4);
++                    std::ptr::copy_nonoverlapping(s_px, d_px, u);
++                    std::ptr::copy_nonoverlapping(s_px, d_px.add(u), u);
++                    std::ptr::copy_nonoverlapping(s_px.add(u), d_px.add(2 * u), u);
++                    std::ptr::copy_nonoverlapping(s_px.add(u), d_px.add(3 * u), u);
++                }
++            }
++        }
++    }
++    Some((staging4, row4 as u64, img4 as u64))
++}
++
++/// Allocates a 4-sample shared staging buffer for a `2 -> 4` promoted texture download and queues
++/// a post-GPU callback to pack `(s0, _, s1, _) -> (s0, s1)` into `destination`.
++fn prepare_promoted_4_to_2_download(
++    encoder: &VulkanBlitEncoder,
++    source_texture: &VulkanTexture,
++    source_size: MtlSize,
++    destination: &crate::gpu::resource::VulkanBuffer,
++    destination_offset: u64,
++    destination_bytes_per_row: u64,
++    destination_bytes_per_image: u64,
++    options: rt::BlitOption,
++    sel: &'static str,
++) -> Option<(rt::Buffer, u64, u64)> {
++    if !source_texture.promoted_2_to_4_samples() {
++        return None;
++    }
++    let cb = encoder.command_buffer()?;
++    let w = usize::try_from(source_size.width).ok().filter(|&v| v > 0)?;
++    let h = usize::try_from(source_size.height)
++        .ok()
++        .filter(|&v| v > 0)?;
++    let d = usize::try_from(source_size.depth).ok().filter(|&v| v > 0)?;
++    let u = promoted_msaa_unit_bytes(&source_texture.raw, options, sel)?;
++    let _ = plain(|| destination.raw.contents())?;
++    let dst_cap = usize::try_from(plain(|| destination.raw.length())).unwrap_or(usize::MAX);
++    let base_off = usize::try_from(destination_offset).ok()?;
++    let row_stride = usize::try_from(destination_bytes_per_row).ok()?;
++    let img_stride = usize::try_from(destination_bytes_per_image).ok()?;
++    let pix2 = 2usize.checked_mul(u)?;
++    let pix4 = 4usize.checked_mul(u)?;
++    let row2_bytes = w.checked_mul(pix2)?;
++    let row4 = w.checked_mul(pix4)?;
++    let img4 = row4.checked_mul(h)?;
++    let total4 = img4.checked_mul(d)?;
++    let last_row = base_off
++        .checked_add((d - 1).checked_mul(img_stride)?)?
++        .checked_add((h - 1).checked_mul(row_stride)?)?;
++    if last_row.checked_add(row2_bytes)? > dst_cap {
++        return None;
++    }
++    let staging4 = plain(|| {
++        source_texture
++            .device
++            .raw
++            .new_buffer(total4 as u64, rt::ResourceOptions::shared())
++    })
++    .ok()?;
++    let staging_hold = staging4.clone();
++    let dst_hold = destination.raw.clone();
++    cb.post_gpu_copies.push(Box::new(move || {
++        let (Some(src_ptr), Some(dst_ptr)) = (
++            plain(|| staging_hold.contents()),
++            plain(|| dst_hold.contents()),
++        ) else {
++            return;
++        };
++        // SAFETY: `staging_hold` (`total4` bytes) and `dst_hold` (`last_row + row2_bytes <= dst_cap`)
++        // remain live and host-mapped for the callback's duration after GPU completion.
++        unsafe {
++            let src_base = src_ptr.as_ptr() as *const u8;
++            let dst_base = dst_ptr.as_ptr();
++            for z in 0..d {
++                for y in 0..h {
++                    let s_row = src_base.add(z * img4 + y * row4);
++                    let d_row = dst_base.add(base_off + z * img_stride + y * row_stride);
++                    for x in 0..w {
++                        let s_px = s_row.add(x * pix4);
++                        let d_px = d_row.add(x * pix2);
++                        std::ptr::copy_nonoverlapping(s_px, d_px, u);
++                        std::ptr::copy_nonoverlapping(s_px.add(2 * u), d_px.add(u), u);
++                    }
++                }
++            }
++        }
++    }));
++    Some((staging4, row4 as u64, img4 as u64))
++}
++
+ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+     /// Each command but `endEncoding` is a first use of Metal's device
+     /// ([`FirstUse::BlitCommand`]: measured for fills and copies, taken alike for the rest), and
+@@ -671,20 +847,39 @@ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+                 destination_origin,
+             } => {
+                 let destination = destination_texture.copied(sel);
++                let expanded = expand_promoted_2_to_4_upload(
++                    source_buffer,
++                    source_offset,
++                    source_bytes_per_row,
++                    source_bytes_per_image,
++                    source_size,
++                    destination_texture,
++                    rt::BlitOption::None,
++                    sel,
++                );
++                let (buf, off, bpr, bpi) = match &expanded {
++                    Some((b, r, i)) => (b, 0, *r, *i),
++                    None => (
++                        &source_buffer.raw,
++                        source_offset,
++                        source_bytes_per_row,
++                        source_bytes_per_image,
++                    ),
++                };
+                 let shape = || {
+                     buffer_copy_shape(
+                         destination,
+                         (destination_level, destination_slice),
+                         (destination_origin, source_size),
+-                        (source_bytes_per_row, source_bytes_per_image),
++                        (bpr, bpi),
+                     )
+                 };
+                 shaped(&shape, &mut |e| {
+                     e.copy_from_buffer_to_texture(
+-                        &source_buffer.raw,
+-                        source_offset,
+-                        source_bytes_per_row,
+-                        source_bytes_per_image,
++                        buf,
++                        off,
++                        bpr,
++                        bpi,
+                         size(source_size),
+                         destination,
+                         destination_slice,
+@@ -707,22 +902,42 @@ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+                 options,
+             } => {
+                 let source = some(sel, source_buffer, "buffer");
+-                let destination = some(sel, destination_texture, "texture").copied(sel);
++                let dst_tex = some(sel, destination_texture, "texture");
++                let destination = dst_tex.copied(sel);
+                 let options = blit_option(sel, options);
++                let expanded = expand_promoted_2_to_4_upload(
++                    source,
++                    source_offset,
++                    source_bytes_per_row,
++                    source_bytes_per_image,
++                    source_size,
++                    dst_tex,
++                    options,
++                    sel,
++                );
++                let (buf, off, bpr, bpi) = match &expanded {
++                    Some((b, r, i)) => (b, 0, *r, *i),
++                    None => (
++                        &source.raw,
++                        source_offset,
++                        source_bytes_per_row,
++                        source_bytes_per_image,
++                    ),
++                };
+                 let shape = || {
+                     buffer_copy_shape(
+                         destination,
+                         (destination_level, destination_slice),
+                         (destination_origin, source_size),
+-                        (source_bytes_per_row, source_bytes_per_image),
++                        (bpr, bpi),
+                     )
+                 };
+                 shaped(&shape, &mut |e| {
+                     e.copy_from_buffer_to_texture(
+-                        &source.raw,
+-                        source_offset,
+-                        source_bytes_per_row,
+-                        source_bytes_per_image,
++                        buf,
++                        off,
++                        bpr,
++                        bpi,
+                         size(source_size),
+                         destination,
+                         destination_slice,
+@@ -763,12 +978,32 @@ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+                 destination_bytes_per_image,
+             } => {
+                 let source = source_texture.copied(sel);
++                let staged = prepare_promoted_4_to_2_download(
++                    self,
++                    source_texture,
++                    source_size,
++                    destination_buffer,
++                    destination_offset,
++                    destination_bytes_per_row,
++                    destination_bytes_per_image,
++                    rt::BlitOption::None,
++                    sel,
++                );
++                let (buf, off, bpr, bpi) = match &staged {
++                    Some((b, r, i)) => (b, 0, *r, *i),
++                    None => (
++                        &destination_buffer.raw,
++                        destination_offset,
++                        destination_bytes_per_row,
++                        destination_bytes_per_image,
++                    ),
++                };
+                 let shape = || {
+                     buffer_copy_shape(
+                         source,
+                         (source_level, source_slice),
+                         (source_origin, source_size),
+-                        (destination_bytes_per_row, destination_bytes_per_image),
++                        (bpr, bpi),
+                     )
+                 };
+                 shaped(&shape, &mut |e| {
+@@ -778,10 +1013,10 @@ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+                         source_level,
+                         origin(source_origin),
+                         size(source_size),
+-                        &destination_buffer.raw,
+-                        destination_offset,
+-                        destination_bytes_per_row,
+-                        destination_bytes_per_image,
++                        buf,
++                        off,
++                        bpr,
++                        bpi,
+                         rt::BlitOption::None,
+                     )
+                 })
+@@ -798,15 +1033,36 @@ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+                 destination_bytes_per_image,
+                 options,
+             } => {
+-                let source = some(sel, source_texture, "texture").copied(sel);
++                let src_tex = some(sel, source_texture, "texture");
++                let source = src_tex.copied(sel);
+                 let destination = some(sel, destination_buffer, "buffer");
+                 let options = blit_option(sel, options);
++                let staged = prepare_promoted_4_to_2_download(
++                    self,
++                    src_tex,
++                    source_size,
++                    destination,
++                    destination_offset,
++                    destination_bytes_per_row,
++                    destination_bytes_per_image,
++                    options,
++                    sel,
++                );
++                let (buf, off, bpr, bpi) = match &staged {
++                    Some((b, r, i)) => (b, 0, *r, *i),
++                    None => (
++                        &destination.raw,
++                        destination_offset,
++                        destination_bytes_per_row,
++                        destination_bytes_per_image,
++                    ),
++                };
+                 let shape = || {
+                     buffer_copy_shape(
+                         source,
+                         (source_level, source_slice),
+                         (source_origin, source_size),
+-                        (destination_bytes_per_row, destination_bytes_per_image),
++                        (bpr, bpi),
+                     )
+                 };
+                 shaped(&shape, &mut |e| {
+@@ -816,10 +1072,10 @@ impl BlitEncoder<VulkanPlatform> for VulkanBlitEncoder {
+                         source_level,
+                         origin(source_origin),
+                         size(source_size),
+-                        &destination.raw,
+-                        destination_offset,
+-                        destination_bytes_per_row,
+-                        destination_bytes_per_image,
++                        buf,
++                        off,
++                        bpr,
++                        bpi,
+                         options,
+                     )
+                 })
+diff --git a/crates/reims-vgpu-vulkan/src/gpu/encode_render.rs b/crates/reims-vgpu-vulkan/src/gpu/encode_render.rs
+index ae6797e0..38cc4df2 100644
+--- a/crates/reims-vgpu-vulkan/src/gpu/encode_render.rs
++++ b/crates/reims-vgpu-vulkan/src/gpu/encode_render.rs
+@@ -1610,7 +1610,10 @@ fn make(
+     taken: Taken,
+ ) -> RaiseResult<Option<VulkanRenderEncoder>> {
+     let sel = "renderCommandEncoderWithDescriptor:";
+-    let d = without_unused_resolves(d);
++    let mut d = without_unused_resolves(d);
++    d.default_raster_sample_count = command_buffer
++        .device
++        .effective_sample_count(sel, d.default_raster_sample_count);
+     match plain_at(sel, || command_buffer.raw.render_command_encoder(&d)) {
+         Ok(raw) => {
+             command_buffer.tiler_work(sel, crate::gpu::metal_space::FirstUse::RenderEncoder);
+diff --git a/crates/reims-vgpu-vulkan/src/gpu/resource.rs b/crates/reims-vgpu-vulkan/src/gpu/resource.rs
+index dfb3aaf7..3b416814 100644
+--- a/crates/reims-vgpu-vulkan/src/gpu/resource.rs
++++ b/crates/reims-vgpu-vulkan/src/gpu/resource.rs
+@@ -107,6 +107,10 @@ pub struct TextureObject {
+     /// ([`TextureObject::gpu_read_only()`]), read once, as it is made ([`writes_never_reach`]),
+     /// as a buffer's is: the texture holds its surface, or the buffer it is over, for its life.
+     pub gpu_read_only: bool,
++    /// The sample count requested by the guest descriptor before any relaxed `2 -> 4` MSAA
++    /// promotion on Vulkan drivers without `2x` MSAA (`crates/reims-vgpu-core`'s paged texture
++    /// dimension validation checks guest row strides against this count).
++    pub guest_sample_count: u64,
+ }
+ 
+ /// Whether the GPU's writes to the texels of a texture on `surface`, or over `under`, never
+@@ -264,6 +268,11 @@ impl TextureObject {
+         self.gpu_read_only
+     }
+ 
++    /// Whether a guest 2-sample multisample texture was promoted to a 4-sample Vulkan texture.
++    pub(crate) fn promoted_2_to_4_samples(&self) -> bool {
++        self.guest_sample_count == 2 && plain(|| self.raw.sample_count()) == 4
++    }
++
+     /// Whether the runtime refuses the GPU's writes of its texels: one over a surface of a 4:4:4
+     /// two-plane YCbCr format whose writes it does not store as Metal's GPU does
+     /// ([`crate::gpu::ycbcr::writes_refused`]).
+@@ -1220,6 +1229,11 @@ impl VulkanTexture {
+                 refused(sel, &e)
+             }
+         };
++        let raw_samples = plain(|| raw.sample_count());
++        let guest_sample_count = match raw_samples == 4 && self.guest_sample_count == 2 {
++            true => 2,
++            false => raw_samples,
++        };
+         Ok(Some(Obj::new(TextureObject {
+             raw,
+             device: self.device.clone_ref(),
+@@ -1232,6 +1246,7 @@ impl VulkanTexture {
+             },
+             space: Arc::new(Hold::sharing(Arc::clone(&self.space))),
+             gpu_read_only: self.gpu_read_only,
++            guest_sample_count,
+         })))
+     }
+ }
+@@ -1510,7 +1525,7 @@ impl Texture<VulkanPlatform> for VulkanTexture {
+     }
+ 
+     fn sample_count(&self) -> u64 {
+-        plain(|| self.raw.sample_count())
++        self.guest_sample_count
+     }
+ 
+     fn texture_type(&self) -> u64 {
+@@ -1786,6 +1801,8 @@ impl Heap<VulkanPlatform> for VulkanHeap {
+         let sel = "newTextureWithDescriptor:offset:";
+         let fields = descriptor.fields();
+         let mut desc = fields.descriptor(sel, Maker::Other);
++        let guest_sample_count = desc.sample_count;
++        desc.sample_count = self.device.effective_sample_count(sel, desc.sample_count);
+         desc.resource_options = with_heap_tracking(sel, desc.resource_options.raw());
+         plain(|| self.placed.lock().attempt());
+         let format = fields.raw_pixel_format();
+@@ -1837,7 +1854,9 @@ impl Heap<VulkanPlatform> for VulkanHeap {
+                 }
+                 let bytes = offset.min(heap_size)..end.min(heap_size);
+                 let under = Under::Heap(self.clone_ref(), bytes.clone());
+-                let texture = self.device.texture_in(raw, under, 0);
++                let texture =
++                    self.device
++                        .texture_in_with_guest_samples(raw, under, 0, guest_sample_count);
+                 // Over the guest's pages alone: in a legacy heap, over the device's memory, what
+                 // the runtime announces of the texture's layout there (untiled, or lossless where
+                 // Metal compresses it) is relayed alone.
+diff --git a/crates/reims-vgpu-vulkan/src/gpu/states.rs b/crates/reims-vgpu-vulkan/src/gpu/states.rs
+index 54b41358..fa305764 100644
+--- a/crates/reims-vgpu-vulkan/src/gpu/states.rs
++++ b/crates/reims-vgpu-vulkan/src/gpu/states.rs
+@@ -257,16 +257,39 @@ impl std::fmt::Display for Sampler<'_> {
+     }
+ }
+ 
++/// Whether this process has logged its relaxed linear substitution for a runtime cubic sampler.
++static RELAYED_CUBIC_SAMPLER: std::sync::atomic::AtomicBool =
++    std::sync::atomic::AtomicBool::new(false);
++
++/// A minification or magnification filter of `raw`, sent with `sel`: `MTLSamplerMinMagFilterCubic`
++/// (2) stays `Cubic` in strict mode, and outside strict mode degrades to `Linear` (1) so
++/// mipmapped, anisotropic, mirror-clamp-to-edge, argument-buffer and unmeasured-format draws do
++/// not abort the process with `NotImplemented(SamplerBicubicFilter)`.
++fn sampler_filter(sel: &'static str, raw: u64) -> metal2vulkan::metal::SamplerMinMagFilter {
++    use metal2vulkan::metal::SamplerMinMagFilter;
++    let filter: SamplerMinMagFilter = metal_value(sel, "sampler filter", raw);
++    if filter == SamplerMinMagFilter::Cubic && !crate::answer::strict() {
++        if !RELAYED_CUBIC_SAMPLER.swap(true, std::sync::atomic::Ordering::Relaxed) {
++            log::warn!(
++                "{sel}: MTLSamplerMinMagFilterCubic (2) approximated with Linear outside strict \
++                 mode so unmeasured bicubic bind states do not abort the VM"
++            );
++        }
++        return SamplerMinMagFilter::Linear;
++    }
++    filter
++}
++
+ /// The runtime's sampler descriptor and options of `d`, each property set in the value's order,
+ /// after its debug line ([`Sampler`]).
+ fn sampler_descriptor(d: &SamplerDesc) -> (SamplerDescriptor, rt::SamplerStateOptions) {
+     log::debug!("{}", Sampler(d));
+     let mut s = SamplerDescriptor::new();
+     if let Some(v) = d.min_filter {
+-        s.min_filter = metal_value("setMinFilter:", "sampler filter", v);
++        s.min_filter = sampler_filter("setMinFilter:", v);
+     }
+     if let Some(v) = d.mag_filter {
+-        s.mag_filter = metal_value("setMagFilter:", "sampler filter", v);
++        s.mag_filter = sampler_filter("setMagFilter:", v);
+     }
+     if let Some(v) = d.lod_average {
+         s.lod_average = v;
+@@ -698,7 +721,10 @@ pub(crate) fn new_render_pipeline_state_from_descriptor(
+     if let Some(raw) = &descriptor.raw_format {
+         raw.dies(sel);
+     }
+-    let (d, placement) = plain(|| (descriptor.desc.lock().clone(), descriptor.placement()));
++    let (mut d, placement) = plain(|| (descriptor.desc.lock().clone(), descriptor.placement()));
++    d.raster_sample_count =
++        u32::try_from(device.effective_sample_count(sel, u64::from(d.raster_sample_count)))
++            .unwrap_or(d.raster_sample_count);
+     let options = pipeline_options(options, placement, descriptor.label.clone());
+     timing::creation(
+         sel,
+@@ -746,7 +772,10 @@ pub(crate) fn new_tile_render_pipeline_state(
+     if let Some(raw) = &descriptor.raw_format {
+         raw.dies(sel);
+     }
+-    let (d, placement) = plain(|| (descriptor.desc.lock().clone(), descriptor.placement()));
++    let (mut d, placement) = plain(|| (descriptor.desc.lock().clone(), descriptor.placement()));
++    d.raster_sample_count =
++        u32::try_from(device.effective_sample_count(sel, u64::from(d.raster_sample_count)))
++            .unwrap_or(d.raster_sample_count);
+     let options = pipeline_options(options, placement, descriptor.label.clone());
+     timing::creation(
+         sel,
+@@ -1383,6 +1412,25 @@ mod tests {
+         );
+     }
+ 
++    /// `MTLSamplerMinMagFilterCubic` (2) stays `Cubic` in strict mode and degrades to `Linear`
++    /// outside strict mode so unmeasured bicubic bind states do not abort the VM.
++    #[test]
++    fn cubic_sampler_approximates_with_linear_outside_strict_mode() {
++        use metal2vulkan::metal::SamplerMinMagFilter;
++        let desc = SamplerDesc {
++            min_filter: Some(2),
++            mag_filter: Some(2),
++            mip_filter: Some(2),
++            ..SamplerDesc::default()
++        };
++        let (strict_desc, _) = sampler_descriptor(&desc);
++        assert_eq!(strict_desc.min_filter, SamplerMinMagFilter::Cubic);
++        assert_eq!(strict_desc.mag_filter, SamplerMinMagFilter::Cubic);
++        let (relaxed_desc, _) = crate::answer::relaxed(|| sampler_descriptor(&desc));
++        assert_eq!(relaxed_desc.min_filter, SamplerMinMagFilter::Linear);
++        assert_eq!(relaxed_desc.mag_filter, SamplerMinMagFilter::Linear);
++    }
++
+     #[cfg(target_os = "macos")]
+     mod metal_tests;
+ }
+diff --git a/crates/reims-vgpu-window/features.md b/crates/reims-vgpu-window/features.md
+index 987c436d..8dac7e1d 100644
+--- a/crates/reims-vgpu-window/features.md
++++ b/crates/reims-vgpu-window/features.md
+@@ -312,6 +312,11 @@ runtime's own device. The switches above apply, and `resolution=` too.
+   scale above 1 among them)
+ - Wayland lets no client place a windowed window: the compositor does.
+   Borderless windows fill the screen named, over its panels. `manual`
++- Ctrl+Alt+F, captured or not, switches the window between windowed and the
++  compositor's full screen, as QEMU's GTK window does with the same chord;
++  the F does not reach the guest, and the image keeps the guest's ratio.
++  `test: native::linux::input::ctrl_alt_f_switches_full_screen_and_keeps_the_f`,
++  `manual`
+ - The host's screens are SDL's: the primary first, then top to bottom and
+   left to right, each at its scale (fractional ones included) and the
+   refresh rate it is set to (its current mode's, as above); a change of
+diff --git a/crates/reims-vgpu-window/src/native/linux/input.rs b/crates/reims-vgpu-window/src/native/linux/input.rs
+index 6f279cf0..8c0e95a3 100644
+--- a/crates/reims-vgpu-window/src/native/linux/input.rs
++++ b/crates/reims-vgpu-window/src/native/linux/input.rs
+@@ -27,6 +27,10 @@
+ //!   every key goes to the guest, captured or not, but what the compositor keeps for itself while
+ //!   not captured. Pressing Ctrl, Alt and Super together while captured lifts every key held and
+ //!   releases capture: the chord the title names.
++//! - **Full screen**: Ctrl+Alt+F, captured or not, switches the window between windowed and the
++//!   compositor's full screen ([`FULL_SCREEN_USAGE`]), as QEMU's own GTK window does with the same
++//!   chord. Linux has no menu to offer it from, and a compositor's own shortcut for it is grabbed
++//!   away from the host while captured. The F is not sent to the guest.
+ //! - **No stuck keys**: losing the keyboard, releasing capture and closing send an up for every
+ //!   key held; losing the keyboard and closing lift the buttons held too.
+ //!
+@@ -48,7 +52,11 @@ use crate::scroll::POINTS_PER_LINE;
+ pub(crate) const FOCUS_CLICK_NS: u64 = 100_000_000;
+ 
+ /// What the title ends with while captured: what capture is on and how to release it.
+-const CAPTURED_SUFFIX: &str = " \u{2014} input captured (press Ctrl+Alt+Super to release)";
++const CAPTURED_SUFFIX: &str =
++    " \u{2014} input captured (press Ctrl+Alt+Super to release, Ctrl+Alt+F for full screen)";
++
++/// The USB usage of F, which with Ctrl and Alt held switches full screen (the module doc).
++pub(crate) const FULL_SCREEN_USAGE: u16 = 0x09;
+ 
+ /// What the window knows when an event reaches it.
+ #[derive(Clone, Copy, Debug, Default, PartialEq)]
+@@ -67,6 +75,8 @@ pub(crate) struct Reaction {
+     /// The capture state changed: the keyboard grab, the pointer's hold, the title and the cursor
+     /// follow it.
+     pub(crate) capture_changed: bool,
++    /// The person asked to switch between windowed and full screen (Ctrl+Alt+F).
++    pub(crate) toggle_full_screen: bool,
+ }
+ 
+ /// What the input sends the host, in the order it is sent.
+@@ -227,6 +237,7 @@ impl Input {
+         }
+         Reaction {
+             capture_changed: self.is_captured() != was_captured,
++            ..Reaction::default()
+         }
+     }
+ 
+@@ -277,6 +288,16 @@ impl Input {
+             }
+             return Reaction::default();
+         }
++        if usage == FULL_SCREEN_USAGE {
++            let held = self.keys.held_modifiers();
++            if held.control && held.option && !held.command {
++                // Kept from the guest: its up finds no down and sends nothing either.
++                return Reaction {
++                    toggle_full_screen: !repeat,
++                    ..Reaction::default()
++                };
++            }
++        }
+         if let Some(event) = self.keys.key_down(usage, repeat) {
+             self.out.push(ToHost::Key(event));
+         }
+@@ -299,6 +320,7 @@ impl Input {
+         self.lift_buttons();
+         Reaction {
+             capture_changed: self.capture.resign_key(),
++            ..Reaction::default()
+         }
+     }
+ 
+@@ -307,6 +329,7 @@ impl Input {
+         self.lift_keys();
+         Reaction {
+             capture_changed: self.capture.release(),
++            ..Reaction::default()
+         }
+     }
+ 
+@@ -516,6 +539,50 @@ mod tests {
+         assert_eq!(input.title_suffix(), UNCAPTURED_SUFFIX);
+     }
+ 
++    /// Ctrl+Alt+F switches full screen, captured or not, and the F never reaches the guest;
++    /// F alone, or with Super held too, is an ordinary key
++    #[test]
++    fn ctrl_alt_f_switches_full_screen_and_keeps_the_f() {
++        let mut input = focused();
++        input.key(0xE0, true, false);
++        input.key(0xE2, true, false);
++        let r = input.key(FULL_SCREEN_USAGE, true, false);
++        assert!(r.toggle_full_screen && !r.capture_changed);
++        assert!(
++            !input.key(FULL_SCREEN_USAGE, true, true).toggle_full_screen,
++            "a host repeat switches nothing"
++        );
++        assert_eq!(
++            input.key(FULL_SCREEN_USAGE, false, false),
++            Reaction::default()
++        );
++        input.key(0xE2, false, false);
++        input.key(0xE0, false, false);
++        assert_eq!(
++            input.take(),
++            vec![
++                ToHost::Key(KeyEvent::down(0xE0)),
++                ToHost::Key(KeyEvent::down(0xE2)),
++                ToHost::Key(KeyEvent::up(0xE2)),
++                ToHost::Key(KeyEvent::up(0xE0)),
++            ]
++        );
++        let r = input.key(FULL_SCREEN_USAGE, true, false);
++        assert!(!r.toggle_full_screen);
++        input.key(FULL_SCREEN_USAGE, false, false);
++        assert_eq!(
++            input.take(),
++            vec![
++                ToHost::Key(KeyEvent::down(FULL_SCREEN_USAGE)),
++                ToHost::Key(KeyEvent::up(FULL_SCREEN_USAGE)),
++            ]
++        );
++        input.key(0xE0, true, false);
++        input.key(0xE2, true, false);
++        input.key(0xE3, true, false);
++        assert!(!input.key(FULL_SCREEN_USAGE, true, false).toggle_full_screen);
++    }
++
+     /// Losing the keyboard lifts every key and button and releases capture
+     #[test]
+     fn losing_the_keyboard_leaves_nothing_stuck() {
+diff --git a/crates/reims-vgpu-window/src/native/linux/sdl.rs b/crates/reims-vgpu-window/src/native/linux/sdl.rs
+index af3c1ea6..40b1d89d 100644
+--- a/crates/reims-vgpu-window/src/native/linux/sdl.rs
++++ b/crates/reims-vgpu-window/src/native/linux/sdl.rs
+@@ -273,17 +273,35 @@ pub(crate) fn input_event(shell: &mut Shell, kind: u32, event: &SDL_Event) -> bo
+             // SAFETY: a key event.
+             let key = unsafe { event.key };
+             keymap::usb_usage(key.scancode.0).is_some_and(|usage| {
+-                shell
+-                    .input
+-                    .0
+-                    .key(usage, key.down, key.repeat)
+-                    .capture_changed
++                let reaction = shell.input.0.key(usage, key.down, key.repeat);
++                if reaction.toggle_full_screen {
++                    toggle_full_screen(shell);
++                }
++                reaction.capture_changed
+             })
+         }
+         _ => false,
+     }
+ }
+ 
++/// Switches the window between windowed and the compositor's full screen (Ctrl+Alt+F,
++/// `super::input`). The window's resize events that follow lay the image out again, keeping the
++/// guest's ratio between black bars, as for any other resize.
++fn toggle_full_screen(shell: &Shell) {
++    // SAFETY: the window is SDL's, on this thread.
++    let flags = unsafe { SDL_GetWindowFlags(shell.sdl) };
++    let full = (flags & SDL_WINDOW_FULLSCREEN).0 != 0;
++    // SAFETY: as above.
++    let asked = unsafe { SDL_SetWindowFullscreen(shell.sdl, !full) };
++    log::info!(
++        target: "reims_vgpu_window",
++        "window {:?}: {} full screen{}",
++        shell.window.title(),
++        if full { "leaving" } else { "entering" },
++        if asked { String::new() } else { format!(" refused: {}", crate::sdl::sdl_error()) }
++    );
++}
++
+ /// Grabs the keyboard while captured, and lets it go (the module doc), logging what that left.
+ pub(crate) fn grab_keyboard(shell: &Shell, captured: bool) {
+     // SAFETY: the window is SDL's, on this thread.
